@@ -21,6 +21,19 @@
 
   <properties>
     <java.version>17</java.version>
+
+<!-- Spring Boot 3.2.5 manages Tomcat 10.1.20, which carries four
+         CRITICAL CVEs that all have fixes available: CVE-2025-24813,
+         CVE-2026-41293, CVE-2026-43512, CVE-2026-43515. The pipeline's Trivy
+         gate found them on its first run against this repo, which is the gate
+         doing exactly what it was added to do.
+
+         Overriding tomcat.version is Spring Boot's own documented mechanism for
+         patching a managed dependency. Its blast radius is a Tomcat patch
+         release rather than a whole framework bump, which is the right trade the
+         week before Kente Fest. Remove this override at the next Spring Boot
+         upgrade rather than carrying it forward. -->
+    <tomcat.version>10.1.59</tomcat.version>
   </properties>
 
   <dependencies>
