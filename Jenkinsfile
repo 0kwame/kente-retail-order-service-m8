@@ -82,47 +82,65 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                // Two passes, because "report everything" and "block a release"
-                // are different jobs and one flag cannot do both.
+                // Trivy keeps its vulnerability DB in a bbolt file under a single
+                // cache directory, and takes an exclusive lock on it. A
+                // multibranch job builds branches CONCURRENTLY --
+                // disableConcurrentBuilds() only serialises runs of the same
+                // branch -- so two scans at once means one of them dies. Both
+                // failure modes were observed here: a lock timeout on one branch
+                // and a SIGSEGV inside bbolt on another, from a cache left
+                // corrupt by the first.
                 //
-                // Pass 1 reports HIGH and MEDIUM without failing: useful to see,
-                // not worth stopping a release for at 2 a.m.
-                // Pass 2 is the gate. --exit-code 1 means a CRITICAL finding
-                // makes the step exit nonzero, and there is no `|| true` to
-                // swallow it -- the stage, and the build, go red.
-                //
-                // --ignore-unfixed on the gate is deliberate: gating on findings
-                // with no available fix would block every release on something
-                // nobody can act on, and a gate people learn to bypass is worse
-                // than no gate. Unfixed criticals still show in pass 1.
-                sh 'trivy image --download-db-only --timeout 10m'
+                // A per-build cache directory would also fix it, at the cost of
+                // re-downloading ~1GB of vulnerability and Java DB on every
+                // build. The cache genuinely is an exclusive resource, so a lock
+                // is the honest way to model it: one warm shared cache, one
+                // scanner at a time.
+                lock(resource: 'trivy-cache') {
+                    sh 'trivy image --download-db-only --timeout 10m --no-progress --skip-version-check'
 
-                sh '''
-                    trivy image \
-                        --scanners vuln \
-                        --severity CRITICAL,HIGH,MEDIUM \
-                        --exit-code 0 \
-                        --no-progress \
-                        --format table \
-                        --output trivy-report.txt \
-                        "${IMAGE_NAME}:${IMAGE_TAG}"
-                    echo "--- Trivy report (informational) ---"
-                    cat trivy-report.txt
-                '''
+                    // Two passes, because "report everything" and "block a
+                    // release" are different jobs and one flag cannot do both.
+                    //
+                    // Pass 1 reports HIGH and MEDIUM without failing: useful to
+                    // see, not worth stopping a release for at 2 a.m.
+                    sh '''
+                        trivy image \
+                            --scanners vuln \
+                            --severity CRITICAL,HIGH,MEDIUM \
+                            --exit-code 0 \
+                            --no-progress \
+                            --skip-version-check \
+                            --format table \
+                            --output trivy-report.txt \
+                            "${IMAGE_NAME}:${IMAGE_TAG}"
+                        echo "--- Trivy report (informational) ---"
+                        cat trivy-report.txt
+                    '''
 
-                sh '''
-                    echo "--- Trivy gate: CRITICAL findings fail this build ---"
-                    trivy image \
-                        --scanners vuln \
-                        --severity CRITICAL \
-                        --ignore-unfixed \
-                        --exit-code 1 \
-                        --no-progress \
-                        "${IMAGE_NAME}:${IMAGE_TAG}"
-                '''
+                    // Pass 2 is the gate. --exit-code 1 means a CRITICAL finding
+                    // makes the step exit nonzero, and there is no `|| true` to
+                    // swallow it -- the stage, and the build, go red.
+                    //
+                    // --ignore-unfixed is deliberate: gating on findings with no
+                    // available fix would block every release on something nobody
+                    // can act on, and a gate people learn to bypass is worse than
+                    // no gate. Unfixed criticals still show in pass 1.
+                    sh '''
+                        echo "--- Trivy gate: CRITICAL findings fail this build ---"
+                        trivy image \
+                            --scanners vuln \
+                            --severity CRITICAL \
+                            --ignore-unfixed \
+                            --exit-code 1 \
+                            --no-progress \
+                            --skip-version-check \
+                            "${IMAGE_NAME}:${IMAGE_TAG}"
+                    '''
+                }
 
-                // The other half of "no secrets in the pipeline": prove none
-                // came back. See scripts/check-no-hardcoded-secrets.sh.
+                // The other half of "no secrets in the pipeline": prove none came
+                // back. See scripts/check-no-hardcoded-secrets.sh.
                 sh './scripts/check-no-hardcoded-secrets.sh'
             }
             post {

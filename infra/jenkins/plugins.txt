@@ -9,6 +9,7 @@ git
 ssh-agent
 credentials-binding
 junit
+lockable-resources
 pipeline-stage-view
 timestamper
 ws-cleanup
