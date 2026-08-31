@@ -27,7 +27,7 @@ RUN install -m 0755 -d /etc/apt/keyrings \
 
 # Trivy, pinned. An unpinned scanner is a pipeline that can start failing for
 # reasons unrelated to the code.
-ARG TRIVY_VERSION=0.58.1
+ARG TRIVY_VERSION=0.63.0
 RUN curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
         | tar -xz -C /usr/local/bin trivy \
     && trivy --version
