@@ -25,9 +25,11 @@ RUN install -m 0755 -d /etc/apt/keyrings \
     && apt-get install -y --no-install-recommends docker-ce-cli \
     && rm -rf /var/lib/apt/lists/*
 
-# Trivy, pinned. An unpinned scanner is a pipeline that can start failing for
+# Trivy, pinned to a version whose release asset actually resolves (0.63.0 was
+# not a published GitHub release, which is how this pin was caught).
+# An unpinned scanner is a pipeline that can start failing for
 # reasons unrelated to the code.
-ARG TRIVY_VERSION=0.63.0
+ARG TRIVY_VERSION=0.74.0
 RUN curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
         | tar -xz -C /usr/local/bin trivy \
     && trivy --version
