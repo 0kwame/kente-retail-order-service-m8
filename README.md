@@ -1,49 +1,96 @@
-# order-service (Kente Retail)
+# order-service (Kente Retail) — CI/CD
 
-A small Spring Boot REST service for Kente Retail's order pipeline. This is the
-**Phase-1 fallback starter** for the CI/CD module ("No More 2 A.M. Releases") --
-use your own containerized Phase-1 service instead if it's further along; use
-this if it isn't.
+A small Spring Boot REST service, and the Jenkins pipeline that ships it without
+a 2 a.m. release window.
 
-## What's here
+This repo started as the Phase-1 fallback starter for the CI/CD module
+("No More 2 A.M. Releases"): a working service and a **partially-working**
+`Jenkinsfile` with three deliberate gaps. All three are closed. What is here now
+is a pipeline that builds, tests, containerizes, scans, gates, and deploys
+blue-green with a rollback — plus the Terraform and Jenkins configuration that
+stands the whole thing up from nothing.
 
-- `pom.xml` -- Maven build, Java 17, Spring Boot 3.2.
-- `src/main/java/...` -- the service itself: `GET /health`, `GET /api/orders`,
-  `POST /api/orders`.
-- `src/test/java/...` -- a starting unit test suite. Not exhaustive -- one test
-  is a placeholder (see the `TODO` in `OrderControllerTest`).
-- `Dockerfile` -- multi-stage build (Maven build stage, slim JRE runtime stage).
-- `Jenkinsfile` -- a **partially-working** pipeline. It builds, tests, and
-  containerizes the service. It does **not** yet meet the brief. Look for the
-  `TODO(learner)` comments -- there are three gaps left on purpose:
-  1. The security-scan stage runs Trivy but never fails the build on what it
-     finds.
-  2. The deploy stage authenticates with a password typed directly into the
-     Jenkinsfile instead of a Jenkins credential.
-  3. There is no blue-green environment, traffic switch, or rollback path --
-     it deploys straight over the single running container.
+## Quick start
 
-## Running it locally
+```bash
+# 1. Provision two EC2 hosts (Jenkins + deploy target)
+cd infra
+terraform init
+terraform apply \
+  -var "admin_cidr=$(curl -s https://checkip.amazonaws.com)/32" \
+  -var "jenkins_admin_password=<choose one>" \
+  -var "slack_webhook_url=<optional>"
+
+# 2. Hand the deploy key to Jenkins and start the controller
+cd .. && ./scripts/bootstrap-jenkins.sh
+
+# 3. Open the URL it prints, log in as admin, run the 'order-service' job
+
+# 4. When you are done
+./scripts/teardown.sh
+```
+
+## What is where
+
+| Path | What it is |
+|---|---|
+| `Jenkinsfile` | The pipeline. Eight stages; the last four run on `main` only. |
+| `deploy/bluegreen.sh` | The traffic switch, on the target. `status`/`deploy`/`switch`/`rollback`. |
+| `deploy/smoke.sh` | Behavioural smoke test. Run against a colour port and through nginx. |
+| `deploy/nginx/nginx.conf` | nginx on `:80`. The upstream file it includes is what a switch rewrites. |
+| `infra/` | Terraform for both hosts, plus the Jenkins image, plugin list and JCasC config. |
+| `scripts/` | Operator entry points: bootstrap, teardown, hardcoded-secret check. |
+| `docs/` | Executive summary, deployment-strategy memo, assumptions log, AI log, walkthrough. |
+
+## How a release works
+
+```
+                     ┌─ main only ──────────────────────────────────┐
+Checkout → Build → Test → Containerize → Security Scan → Approve → Deploy      → Switch  → Verify
+                                              │                      (idle       (nginx
+                                              │                       colour,     upstream
+                                              │                       smoked      + smoke
+                                         CRITICAL                     first)      via :80)
+                                         fails here
+```
+
+The deploy target runs two containers at all times — `order-service-blue` on
+`127.0.0.1:8081` and `order-service-green` on `127.0.0.1:8082` — with nginx on
+`:80` pointing at exactly one of them. A release goes to whichever colour is
+*not* live, gets smoke-tested there while still receiving no traffic, and only
+then does the upstream file change and nginx reload. The previous colour keeps
+running, so a rollback is a config reload rather than a redeploy:
+
+```bash
+ssh ec2-user@<target> sudo bluegreen.sh status     # which colour is live
+ssh ec2-user@<target> sudo bluegreen.sh rollback   # put the previous one back
+```
+
+If a build fails *after* traffic has moved, the pipeline rolls back on its own.
+
+## The three gaps, and what closed them
+
+| Gap in the seeded pipeline | Fix |
+|---|---|
+| Trivy ran with `--exit-code 0 \|\| true` — reported findings, blocked nothing | Two passes: everything reported and archived, `CRITICAL` alone as a hard gate with no swallowed exit code |
+| `sshpass -p '<literal>'` — the password was in the file, in git, and in every build log | `sshagent(credentials: ['kente-deploy-ssh'])`, declared in JCasC, referenced by id only |
+| `docker rm -f` then `docker run` — an outage on every release, nothing to go back to | Blue-green with an nginx switch, pre-switch smoke test, and automatic rollback |
+
+`scripts/check-no-hardcoded-secrets.sh` runs on every build so the second one
+stays closed.
+
+## Branches that are supposed to fail
+
+Evidence for two acceptance criteria, as real red builds rather than screenshots:
+
+| Branch | Fails at | Why |
+|---|---|---|
+| `broken/order-id-collision` | `Test` | Sequence starts inside the fixture range, so a generated ID collides with `ORD-1001` |
+| `broken/vulnerable-dependency` | `Security Scan` | Ships a Log4j version with a fixed `CRITICAL` CVE |
+
+## Running the service locally
 
 ```bash
 mvn spring-boot:run
-# or, containerized:
-docker build -t order-service:local .
-docker run --rm -p 8080:8080 order-service:local
+./deploy/smoke.sh http://127.0.0.1:8080
 ```
-
-Then:
-
-```bash
-curl localhost:8080/health
-curl localhost:8080/api/orders
-```
-
-## Building the CI/CD pipeline
-
-Your job is to take the `Jenkinsfile` in this repo from "partially working" to
-meeting every Acceptance Criterion in the Learner Brief: Jenkins credentials
-for every secret, a security-scan stage that actually gates the build, and a
-blue-green deployment with a demonstrated rollback. Everything else about how
-you get there -- where Jenkins runs, how much manual approval a deploy needs --
-is yours to decide and justify in the Assumptions Log.
