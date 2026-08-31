@@ -36,5 +36,14 @@ RUN curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY
 
 USER jenkins
 
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+# --chmod so the build does not inherit whatever mode the file happens to have
+# on the build host. Without it, a restrictive umask on the host produces an
+# image whose plugin list the jenkins user cannot read.
+COPY --chown=jenkins:jenkins --chmod=644 plugins.txt /usr/share/jenkins/ref/plugins.txt
+
+# The `ls` is the point: jenkins-plugin-cli prints "Unable to open <file>" and
+# then exits 0, so without an explicit check a completely pluginless Jenkins
+# builds successfully and only fails later, in JCasC, for a reason that looks
+# unrelated.
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt \
+    && ls /usr/share/jenkins/ref/plugins/*.jpi >/dev/null 2>&1
