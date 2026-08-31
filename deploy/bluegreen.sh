@@ -81,6 +81,10 @@ cmd_current() { current_colour; }
 
 cmd_idle() { other_colour "$(current_colour)"; }
 
+# So the pipeline can smoke-test the idle colour without duplicating the
+# port mapping on the Jenkins side.
+cmd_port() { port_for "${1:?usage: bluegreen.sh port <blue|green>}"; }
+
 cmd_status() {
     local live idle
     live=$(current_colour)
@@ -186,10 +190,11 @@ main() {
         status)   cmd_status ;;
         current)  cmd_current ;;
         idle)     cmd_idle ;;
+        port)     cmd_port "$@" ;;
         deploy)   cmd_deploy "$@" ;;
         switch)   cmd_switch "$@" ;;
         rollback) cmd_rollback ;;
-        *)        die "usage: bluegreen.sh {status|current|idle|deploy <colour> <image>|switch <colour>|rollback}" ;;
+        *)        die "usage: bluegreen.sh {status|current|idle|port <colour>|deploy <colour> <image>|switch <colour>|rollback}" ;;
     esac
 }
 

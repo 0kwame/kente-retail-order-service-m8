@@ -5,8 +5,8 @@
 // comments below for the three gaps you need to close:
 //   1. CLOSED -- Security Scan now gates on CRITICAL findings.
 //   2. CLOSED -- Deploy authenticates with a Jenkins SSH credential.
-//   3. There is no blue-green environment, traffic switch, or rollback --
-//      it just overwrites the one container that's already running.
+//   3. CLOSED -- blue-green deploy, nginx traffic switch, and an automatic
+//      rollback if the build fails after traffic has moved.
 //
 // Where Jenkins itself runs and how much manual approval "Deploy" needs are
 // yours to decide -- this file doesn't assume either for you.
@@ -105,19 +105,26 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy (idle colour)') {
+            // Feature branches build, test and scan but never touch the deploy
+            // target. The two broken/* branches are supposed to die above this
+            // line, which is the whole point of them.
+            when { branch 'main' }
             steps {
-                // Gap 2 of 3 closed. The password that used to be typed into
-                // this file is gone; authentication is an SSH key held in the
-                // Jenkins credential store and referenced only by its id.
-                // sshagent puts the key in an agent for the duration of the
-                // block -- it is never written to the workspace, never echoed,
-                // and never appears in the build log.
-                //
-                // The credential is declared in infra/jenkins/jenkins.yaml, so
-                // "which secrets does this pipeline need" is answerable from the
-                // repo instead of from someone's memory of the Jenkins UI.
                 sshagent(credentials: ['kente-deploy-ssh']) {
+                    script {
+                        // Ask the target which colour is live rather than
+                        // tracking it in Jenkins. Jenkins can be rebuilt; the
+                        // nginx upstream file is the truth either way.
+                        env.LIVE_COLOUR = sh(returnStdout: true, script:
+                            'ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" sudo /usr/local/bin/bluegreen.sh current').trim()
+                        env.IDLE_COLOUR = sh(returnStdout: true, script:
+                            'ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" sudo /usr/local/bin/bluegreen.sh idle').trim()
+                        env.IDLE_PORT = sh(returnStdout: true, script:
+                            'ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" sudo /usr/local/bin/bluegreen.sh port ${IDLE_COLOUR}').trim()
+                        echo "live=${env.LIVE_COLOUR}  deploying to idle=${env.IDLE_COLOUR} on port ${env.IDLE_PORT}"
+                    }
+
                     sh '''
                         set -eu
 
@@ -130,20 +137,76 @@ pipeline {
                             | gzip -1 \
                             | ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" 'gunzip | docker load'
 
-                        ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" "
-                            docker rm -f order-service 2>/dev/null || true
-                            docker run -d --name order-service --restart unless-stopped \
-                                -p 8080:8080 '${IMAGE_NAME}:${IMAGE_TAG}'
-                        "
+                        # bluegreen.sh refuses to deploy onto the live colour, so
+                        # the not-blue-green path is closed on the target too, not
+                        # just by convention here.
+                        ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" \
+                            "sudo /usr/local/bin/bluegreen.sh deploy ${IDLE_COLOUR} ${IMAGE_NAME}:${IMAGE_TAG}"
+
+                        # Smoke the new colour BEFORE any traffic reaches it. A
+                        # build that gets this far and fails here has cost the
+                        # customer nothing.
+                        ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" \
+                            "/usr/local/bin/smoke.sh http://127.0.0.1:${IDLE_PORT}"
                     '''
                 }
+            }
+        }
+
+        stage('Switch Traffic') {
+            when { branch 'main' }
+            steps {
+                script {
+                    // Set before the switch, not after: if the switch half-fails,
+                    // post{failure} still needs to know traffic may have moved.
+                    env.SWITCH_ATTEMPTED = 'true'
+                }
+                sshagent(credentials: ['kente-deploy-ssh']) {
+                    sh '''
+                        set -eu
+                        ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" \
+                            "sudo /usr/local/bin/bluegreen.sh switch ${IDLE_COLOUR}"
+                    '''
+                }
+
+                // Smoke through nginx from the Jenkins host -- an outside-the-box
+                // check that the switch actually moved customer traffic, not just
+                // that a container is healthy on localhost.
+                sh './deploy/smoke.sh http://${DEPLOY_HOST}'
+            }
+        }
+
+        stage('Verify') {
+            when { branch 'main' }
+            steps {
+                sshagent(credentials: ['kente-deploy-ssh']) {
+                    sh 'ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" sudo /usr/local/bin/bluegreen.sh status'
+                }
+                echo "${env.IDLE_COLOUR} is live with ${env.IMAGE_NAME}:${env.IMAGE_TAG}. " +
+                     "${env.LIVE_COLOUR} is still running and one reload away if this goes wrong."
             }
         }
     }
 
     post {
         failure {
-            echo "Pipeline failed at stage: ${env.STAGE_NAME}"
+            script {
+                if (env.SWITCH_ATTEMPTED == 'true') {
+                    echo 'Traffic had already been switched when this build failed -- rolling back.'
+                    // A rollback that throws must not mask the original failure,
+                    // and must not stop the notification below from going out.
+                    try {
+                        sshagent(credentials: ['kente-deploy-ssh']) {
+                            sh 'ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" sudo /usr/local/bin/bluegreen.sh rollback'
+                        }
+                        echo 'Rollback complete.'
+                    } catch (err) {
+                        echo "ROLLBACK FAILED -- the target needs a human now: ${err}"
+                    }
+                } else {
+                    echo 'Failed before any traffic moved. Nothing to roll back.'
+                }
+            }
         }
     }
 }
