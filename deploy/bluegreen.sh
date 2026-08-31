@@ -77,6 +77,18 @@ wait_healthy() {
     die "never became healthy: $url (gave up after $((HEALTH_RETRIES * HEALTH_INTERVAL))s)"
 }
 
+# curl writes "000" when it cannot connect at all, which reads as a status code
+# but is not one. Say "down" instead, because this output gets read out loud.
+http_code() {
+    local code
+    code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 3 "$1" 2>/dev/null || true)
+    if [[ -z "$code" || "$code" == "000" ]]; then
+        echo "down"
+    else
+        echo "$code"
+    fi
+}
+
 cmd_current() { current_colour; }
 
 cmd_idle() { other_colour "$(current_colour)"; }
@@ -98,16 +110,13 @@ cmd_status() {
         --format '  {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}' || true
     echo
     for colour in blue green; do
-        local port code
+        local port
         port=$(port_for "$colour")
-        code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 3 \
-            "http://127.0.0.1:${port}${HEALTH_PATH}" 2>/dev/null || echo "---")
-        echo "  ${colour} direct  http://127.0.0.1:${port}${HEALTH_PATH} -> ${code}"
+        printf '  %-5s direct  http://127.0.0.1:%s%s -> %s\n' \
+            "$colour" "$port" "$HEALTH_PATH" "$(http_code "http://127.0.0.1:${port}${HEALTH_PATH}")"
     done
-    local code80
-    code80=$(curl -s -o /dev/null -w '%{http_code}' --max-time 3 \
-        "http://127.0.0.1${HEALTH_PATH}" 2>/dev/null || echo "---")
-    echo "  via nginx    http://127.0.0.1${HEALTH_PATH} -> ${code80}"
+    printf '  %-5s        http://127.0.0.1%s -> %s\n' \
+        "nginx" "$HEALTH_PATH" "$(http_code "http://127.0.0.1${HEALTH_PATH}")"
 }
 
 # Start an image on one colour's port. Does not touch traffic.
