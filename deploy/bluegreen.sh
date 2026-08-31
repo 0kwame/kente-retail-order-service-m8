@@ -11,7 +11,7 @@
 # Installed root-owned at /usr/local/bin/bluegreen.sh by infra/user_data_target.sh.
 # The deploy user is granted exactly this one command via sudoers.
 #
-# ponytail: state lives in a conf file and there is one target host. Move to a
+# Known ceiling: state lives in a conf file and there is one target host. Move to a
 # real service registry (or an ALB with two target groups) only if the deploy
 # target ever becomes more than one box.
 

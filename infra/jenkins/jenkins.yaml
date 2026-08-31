@@ -64,10 +64,6 @@ credentials:
               description: "Slack incoming webhook for pipeline-failure notifications. Empty is handled by the pipeline."
               secret: "${SLACK_WEBHOOK_URL}"
 
-unclassified:
-  timestamper:
-    allPipelines: true
-
 jobs:
   - script: |
       multibranchPipelineJob('order-service') {

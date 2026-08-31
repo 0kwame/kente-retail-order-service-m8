@@ -1,22 +1,41 @@
 // Kente Retail -- order-service pipeline.
 //
-// STATUS: partially working. It builds, tests, and containerizes the
-// service, but it does not meet the brief yet -- see the TODO(learner)
-// comments below for the three gaps you need to close:
-//   1. CLOSED -- Security Scan now gates on CRITICAL findings.
-//   2. CLOSED -- Deploy authenticates with a Jenkins SSH credential.
-//   3. CLOSED -- blue-green deploy, nginx traffic switch, and an automatic
-//      rollback if the build fails after traffic has moved.
+// Build -> Test -> Containerize -> Security Scan -> Approve -> Deploy to the
+// idle colour -> Switch traffic -> Verify. On main only, the last four run;
+// every other branch stops after the scan.
 //
-// Where Jenkins itself runs and how much manual approval "Deploy" needs are
-// yours to decide -- this file doesn't assume either for you.
+// All three gaps in the seeded pipeline are closed:
+//   1. Security Scan gates on CRITICAL findings and cannot be passed by a
+//      swallowed exit code.
+//   2. Deploy authenticates with a Jenkins SSH credential referenced by id.
+//   3. Deploys are blue-green with an nginx traffic switch, and traffic rolls
+//      back automatically if the build fails after the switch.
+//
+// The two decisions the brief left open are decided here and argued in
+// docs/assumptions-log.md:
+//   * Jenkins runs as a container it builds itself, on its own EC2 host
+//     (infra/jenkins/). It is not assumed to pre-exist.
+//   * One manual approval, immediately before traffic moves, on main only.
+//     Everything before it is reversible and traffic-free.
+//
+// DEPLOY_HOST is a controller-wide env var set by JCasC from Terraform, so
+// nothing in this file is pinned to one environment.
 
 pipeline {
     agent any
 
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '10'))
+        // The one race this design cannot survive: two runs reading the same
+        // live colour and both switching traffic.
+        disableConcurrentBuilds()
+        timeout(time: 45, unit: 'MINUTES')
+    }
+
     environment {
-        IMAGE_NAME  = "kente-retail/order-service"
-        IMAGE_TAG   = "${env.BUILD_NUMBER}"
+        IMAGE_NAME = "kente-retail/order-service"
+        // IMAGE_TAG is set in Checkout, once the commit is actually known.
         // DEPLOY_HOST is NOT set here. It is a controller-wide env var set by
         // JCasC from the Terraform output (infra/jenkins/jenkins.yaml), so this
         // pipeline is not pinned to one environment and one IP.
@@ -27,6 +46,14 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    // Build number alone cannot answer "which commit is live on
+                    // the target right now", which is the first question asked
+                    // during an incident. The tag carries both.
+                    env.GIT_SHA = sh(returnStdout: true, script: 'git rev-parse --short=7 HEAD').trim()
+                    env.IMAGE_TAG = "${env.BUILD_NUMBER}-${env.GIT_SHA}"
+                    echo "building ${env.IMAGE_NAME}:${env.IMAGE_TAG} from ${env.BRANCH_NAME}"
+                }
             }
         }
 
@@ -101,6 +128,32 @@ pipeline {
             post {
                 always {
                     archiveArtifacts artifacts: 'trivy-report.txt', allowEmptyArchive: true
+                }
+            }
+        }
+
+        stage('Approve Release') {
+            // On main only, and deliberately here rather than earlier: build,
+            // test, scan and the deploy to the idle colour are all reversible
+            // and touch no customer traffic, so gating them only slows down
+            // feedback. The switch is the moment that matters, so that is the
+            // moment a human signs off. Reasoning in docs/assumptions-log.md.
+            //
+            // Known ceiling: this holds an executor while it waits. Fine at two
+            // executors and one team; move to `agent none` for this stage if the
+            // controller ever gets busy enough for that to queue real work.
+            when { branch 'main' }
+            options {
+                timeout(time: 30, unit: 'MINUTES')
+            }
+            steps {
+                script {
+                    def approver = input(
+                        message: "Deploy ${env.IMAGE_NAME}:${env.IMAGE_TAG} to ${env.DEPLOY_HOST}? " +
+                                 "The idle colour will be smoke-tested before any traffic moves.",
+                        ok: 'Deploy',
+                        submitterParameter: 'APPROVER')
+                    echo "Release approved by: ${approver}"
                 }
             }
         }
@@ -206,7 +259,57 @@ pipeline {
                 } else {
                     echo 'Failed before any traffic moved. Nothing to roll back.'
                 }
+
+                env.FAILED_STAGE = env.STAGE_NAME ?: 'unknown'
+                notifyFailure()
             }
         }
+
+        always {
+            cleanWs(notFailBuild: true)
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Value-add (brief section 7): a failed pipeline that nobody hears about is a
+// 2 a.m. release with extra steps. This posts the branch, build, failing stage
+// and commit to Slack the moment a build goes red, so mean-time-to-notice is
+// seconds instead of "whenever someone opens Jenkins".
+//
+// Three things it deliberately does NOT do:
+//   * fail the build if the notification fails -- a broken webhook must not
+//     look like broken code;
+//   * require a webhook at all -- an empty credential skips cleanly, so the
+//     pipeline runs anywhere;
+//   * let the URL touch Groovy -- the secret is bound as a shell env var only,
+//     and jq builds the payload so a stage name with a quote in it cannot
+//     produce malformed JSON.
+// ---------------------------------------------------------------------------
+void notifyFailure() {
+    try {
+        withCredentials([string(credentialsId: 'kente-slack-webhook', variable: 'SLACK_WEBHOOK')]) {
+            sh '''
+                set -eu
+                if [ -z "${SLACK_WEBHOOK:-}" ]; then
+                    echo "slack: no webhook configured -- skipping notification"
+                    exit 0
+                fi
+
+                text=":rotating_light: *order-service pipeline failed*
+*branch:* ${BRANCH_NAME:-unknown}    *build:* #${BUILD_NUMBER}
+*failed at:* ${FAILED_STAGE:-unknown}
+*commit:* ${GIT_SHA:-unknown}
+${BUILD_URL:-}"
+
+                jq -n --arg t "$text" '{text: $t}' \
+                    | curl -fsS --max-time 10 -X POST \
+                        -H 'Content-Type: application/json' \
+                        --data @- "$SLACK_WEBHOOK" >/dev/null
+                echo "slack: failure notification sent"
+            '''
+        }
+    } catch (err) {
+        echo "slack: could not notify (${err}) -- not failing the build over a notification"
     }
 }
