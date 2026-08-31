@@ -3,7 +3,7 @@
 // STATUS: partially working. It builds, tests, and containerizes the
 // service, but it does not meet the brief yet -- see the TODO(learner)
 // comments below for the three gaps you need to close:
-//   1. Security Scan never fails the build, no matter what Trivy finds.
+//   1. CLOSED -- Security Scan now gates on CRITICAL findings.
 //   2. Deploy authenticates with a password typed directly into this file.
 //   3. There is no blue-green environment, traffic switch, or rollback --
 //      it just overwrites the one container that's already running.
@@ -52,12 +52,53 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                // TODO(learner): --exit-code 0 means this step always "succeeds"
-                // regardless of what Trivy finds, and the `|| true` on top of that
-                // swallows even a nonzero exit if you change the flag. The CTO
-                // wants critical vulnerabilities to actually stop the pipeline --
-                // fix both of these.
-                sh 'trivy image --severity CRITICAL,HIGH --exit-code 0 "${IMAGE_NAME}:${IMAGE_TAG}" || true'
+                // Two passes, because "report everything" and "block a release"
+                // are different jobs and one flag cannot do both.
+                //
+                // Pass 1 reports HIGH and MEDIUM without failing: useful to see,
+                // not worth stopping a release for at 2 a.m.
+                // Pass 2 is the gate. --exit-code 1 means a CRITICAL finding
+                // makes the step exit nonzero, and there is no `|| true` to
+                // swallow it -- the stage, and the build, go red.
+                //
+                // --ignore-unfixed on the gate is deliberate: gating on findings
+                // with no available fix would block every release on something
+                // nobody can act on, and a gate people learn to bypass is worse
+                // than no gate. Unfixed criticals still show in pass 1.
+                sh 'trivy image --download-db-only --timeout 10m'
+
+                sh '''
+                    trivy image \
+                        --scanners vuln \
+                        --severity CRITICAL,HIGH,MEDIUM \
+                        --exit-code 0 \
+                        --no-progress \
+                        --format table \
+                        --output trivy-report.txt \
+                        "${IMAGE_NAME}:${IMAGE_TAG}"
+                    echo "--- Trivy report (informational) ---"
+                    cat trivy-report.txt
+                '''
+
+                sh '''
+                    echo "--- Trivy gate: CRITICAL findings fail this build ---"
+                    trivy image \
+                        --scanners vuln \
+                        --severity CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 1 \
+                        --no-progress \
+                        "${IMAGE_NAME}:${IMAGE_TAG}"
+                '''
+
+                // The other half of "no secrets in the pipeline": prove none
+                // came back. See scripts/check-no-hardcoded-secrets.sh.
+                sh './scripts/check-no-hardcoded-secrets.sh'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'trivy-report.txt', allowEmptyArchive: true
+                }
             }
         }
 
