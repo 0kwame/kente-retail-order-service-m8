@@ -1,0 +1,14 @@
+# Kept to what the pipeline actually uses. Every extra plugin is another
+# upgrade that can break a build the night before a release.
+configuration-as-code
+job-dsl
+workflow-aggregator
+workflow-multibranch
+basic-branch-build-strategies
+git
+ssh-agent
+credentials-binding
+junit
+pipeline-stage-view
+timestamper
+ws-cleanup

@@ -1,0 +1,96 @@
+# Jenkins Configuration as Code.
+#
+# This file, plus the Dockerfile and plugins.txt beside it, IS the Jenkins
+# install. Nothing here was clicked in a UI, which is the point: the controller
+# can be rebuilt from the repo in minutes, and the two credentials the pipeline
+# needs are declared here rather than existing as undocumented state.
+#
+# Secrets resolve from two sources and never from this file:
+#   ${JENKINS_ADMIN_PASSWORD}, ${SLACK_WEBHOOK_URL}, ${DEPLOY_HOST}
+#       -- container environment, set from /etc/kente-jenkins.env
+#   ${kente_deploy_key}
+#       -- JCasC's Docker-secret source: the file /run/secrets/kente_deploy_key,
+#          mounted read-only from /etc/kente-secrets on the host.
+
+jenkins:
+  systemMessage: |
+    Kente Retail -- order-service CI/CD. Configured by JCasC from
+    infra/jenkins/jenkins.yaml. Do not configure this controller by hand;
+    change the repo and re-run infra/jenkins/bootstrap.sh.
+  numExecutors: 2
+  mode: NORMAL
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: "${JENKINS_ADMIN_PASSWORD}"
+
+  authorizationStrategy:
+    fullControlOnceLoggedIn:
+      allowAnonymousRead: false
+
+  globalNodeProperties:
+    - envVars:
+        env:
+          # The deploy target's private IP, injected by Terraform. Keeping it
+          # here rather than in the Jenkinsfile means the pipeline is not
+          # pinned to one environment.
+          - key: DEPLOY_HOST
+            value: "${DEPLOY_HOST}"
+
+security:
+  scriptApproval:
+    approvedSignatures:
+      - "method java.lang.String trim"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: kente-deploy-ssh
+              username: deploy
+              description: "SSH key for deploy@deploy-target. Replaces the hardcoded password in the seeded Jenkinsfile."
+              privateKeySource:
+                directEntry:
+                  privateKey: "${kente_deploy_key}"
+
+          - string:
+              scope: GLOBAL
+              id: kente-slack-webhook
+              description: "Slack incoming webhook for pipeline-failure notifications. Empty is handled by the pipeline."
+              secret: "${SLACK_WEBHOOK_URL}"
+
+unclassified:
+  timestamper:
+    allPipelines: true
+
+jobs:
+  - script: |
+      multibranchPipelineJob('order-service') {
+          displayName('order-service (Kente Retail)')
+          description('''Multibranch so the deliberately-broken branches are one click each:
+                         main                         -> full green run, deploy + switch
+                         broken/order-id-collision    -> must fail at Test
+                         broken/vulnerable-dependency -> must fail at Security Scan''')
+          branchSources {
+              git {
+                  id('order-service')
+                  remote(System.getenv('REPO_URL'))
+                  includes('main broken/*')
+              }
+          }
+          orphanedItemStrategy {
+              discardOldItems {
+                  numToKeep(20)
+              }
+          }
+          triggers {
+              periodicFolderTrigger {
+                  interval('1m')
+              }
+          }
+      }

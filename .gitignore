@@ -4,3 +4,11 @@ target/
 *.iml
 .vscode/
 .DS_Store
+
+# Terraform state and the generated lab keypair -- never committed.
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/terraform.tfstate
+infra/terraform.tfstate.*
+infra/*.tfvars
+infra/*.pem
