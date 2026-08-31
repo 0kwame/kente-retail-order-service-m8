@@ -4,7 +4,7 @@
 // service, but it does not meet the brief yet -- see the TODO(learner)
 // comments below for the three gaps you need to close:
 //   1. CLOSED -- Security Scan now gates on CRITICAL findings.
-//   2. Deploy authenticates with a password typed directly into this file.
+//   2. CLOSED -- Deploy authenticates with a Jenkins SSH credential.
 //   3. There is no blue-green environment, traffic switch, or rollback --
 //      it just overwrites the one container that's already running.
 //
@@ -17,7 +17,10 @@ pipeline {
     environment {
         IMAGE_NAME  = "kente-retail/order-service"
         IMAGE_TAG   = "${env.BUILD_NUMBER}"
-        DEPLOY_HOST = "10.0.2.20" // TODO(learner): point this at your real deployment target
+        // DEPLOY_HOST is NOT set here. It is a controller-wide env var set by
+        // JCasC from the Terraform output (infra/jenkins/jenkins.yaml), so this
+        // pipeline is not pinned to one environment and one IP.
+        SSH_OPTS = "-o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10"
     }
 
     stages {
@@ -104,23 +107,36 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // TODO(learner): this is exactly the kind of hardcoded credential
-                // the brief says must never ship -- '***REMOVED***' is typed right
-                // here in plain text. Replace this with a Jenkins credential
-                // (withCredentials / sshagent, referenced by credentialsId) before
-                // this pipeline is "done."
+                // Gap 2 of 3 closed. The password that used to be typed into
+                // this file is gone; authentication is an SSH key held in the
+                // Jenkins credential store and referenced only by its id.
+                // sshagent puts the key in an agent for the duration of the
+                // block -- it is never written to the workspace, never echoed,
+                // and never appears in the build log.
                 //
-                // TODO(learner): this also deploys straight over the one running
-                // container. The brief asks for blue-green with a demonstrated
-                // rollback -- there is no second (green) environment and no
-                // traffic-switch step here yet.
-                sh """
-                    sshpass -p '***REMOVED***' ssh -o StrictHostKeyChecking=no deploy@${DEPLOY_HOST} '
-                        docker pull ${IMAGE_NAME}:${IMAGE_TAG} &&
-                        docker rm -f order-service || true &&
-                        docker run -d --name order-service -p 8080:8080 ${IMAGE_NAME}:${IMAGE_TAG}
-                    '
-                """
+                // The credential is declared in infra/jenkins/jenkins.yaml, so
+                // "which secrets does this pipeline need" is answerable from the
+                // repo instead of from someone's memory of the Jenkins UI.
+                sshagent(credentials: ['kente-deploy-ssh']) {
+                    sh '''
+                        set -eu
+
+                        # No registry in this environment, so ship the image over
+                        # the same SSH connection. One less credential to hold and
+                        # one less service to pay for; see docs/assumptions-log.md
+                        # for when this stops being the right call.
+                        echo "shipping ${IMAGE_NAME}:${IMAGE_TAG} to ${DEPLOY_HOST}"
+                        docker save "${IMAGE_NAME}:${IMAGE_TAG}" \
+                            | gzip -1 \
+                            | ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" 'gunzip | docker load'
+
+                        ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" "
+                            docker rm -f order-service 2>/dev/null || true
+                            docker run -d --name order-service --restart unless-stopped \
+                                -p 8080:8080 '${IMAGE_NAME}:${IMAGE_TAG}'
+                        "
+                    '''
+                }
             }
         }
     }
