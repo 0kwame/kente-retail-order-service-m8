@@ -128,9 +128,9 @@ it reads as a trade rather than a claim that registries are unnecessary.
 
 ---
 
-## Two defects AI introduced that only running things caught
+## Four defects AI introduced that only running things caught
 
-Both are the same shape: code that was locally correct and globally wrong.
+All the same shape: code that was locally correct and globally wrong.
 
 **`.gitignore` swallowed a file the deploy target needed to boot.** The seeded
 `.gitignore` contains `target/` for Maven. A new directory at
@@ -148,7 +148,28 @@ and `jenkins-plugin-cli` could not read its own plugin list — printing
 `Unable to open ...` **and exiting 0**. The image built green with zero plugins,
 and the failure surfaced much later in JCasC looking like an unrelated problem.
 
-That second one is the most instructive thing in this log. The fix went in at three
+**Every `chmod +x` was invisible to git.** The seeded repo carries
+`core.fileMode = false`, so the executable bits set while building this were never
+recorded — all seven scripts committed as `100644`. The pipeline failed with
+`Permission denied` (exit 126) calling `./scripts/check-no-hardcoded-secrets.sh`
+from a fresh checkout. Worth noting where the *next* failure would have been:
+`./deploy/smoke.sh` in the Switch Traffic stage, two stages later, **after traffic
+had already moved**. Fixed both the cause (`core.fileMode true`) and the effect
+(`update-index --chmod=+x`).
+
+**A fix that was committed with a message saying it worked, and did not.** The
+nginx `types_hash` warning appeared on every reload, so on every traffic switch.
+The fix raised `types_hash_max_size` to 2048 and the commit message claimed it was
+silenced. It was not — the warning still fired, just quoting a different number.
+Caught by reading the reload output of the next rollback. 4096 was then tested with
+`nginx -t` on the actual target *before* the second commit, and that commit says
+plainly that the previous one was wrong.
+
+That last one is the cheapest possible lesson in the difference between "I made the
+change" and "I verified the change." The claim cost nothing to make and nothing to
+check, and it was still wrong.
+
+The umask one is the most instructive thing in this log. The fix went in at three
 levels rather than one: the umask now scopes to a subshell (root cause);
 `COPY --chown --chmod` makes the image independent of host file modes (defence in
 depth); and the build now asserts at least one plugin `.jpi` exists, so a
