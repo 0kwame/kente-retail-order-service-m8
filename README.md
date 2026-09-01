@@ -39,8 +39,8 @@ cd .. && ./scripts/bootstrap-jenkins.sh
 | `deploy/smoke.sh` | Behavioural smoke test. Run against a colour port and through nginx. |
 | `deploy/nginx/nginx.conf` | nginx on `:80`. The upstream file it includes is what a switch rewrites. |
 | `infra/` | Terraform for both hosts, plus the Jenkins image, plugin list and JCasC config. |
-| `scripts/` | Operator entry points: bootstrap, teardown, hardcoded-secret check. |
-| `docs/` | Executive summary, deployment-strategy memo, assumptions log, AI log, walkthrough. |
+| `scripts/` | Operator entry points: bootstrap, teardown, hardcoded-secret check, availability probe. |
+| `docs/` | Executive summary, deployment-strategy memo, assumptions log, AI log, Jenkins setup, walkthrough, incident report, verified evidence. |
 
 ## How a release works
 
