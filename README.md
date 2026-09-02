@@ -20,6 +20,9 @@ terraform apply \
   -var "admin_cidr=$(curl -s https://checkip.amazonaws.com)/32" \
   -var "jenkins_admin_password=<choose one>" \
   -var "slack_webhook_url=<optional>"
+# Always pass admin_cidr on the command line. It is the one address allowed to
+# reach SSH and Jenkins, and an ISP address changes without warning -- a stale
+# value locks you out, and the symptom is a timeout rather than an error.
 
 # 2. Hand the deploy key to Jenkins and start the controller
 cd .. && ./scripts/bootstrap-jenkins.sh

@@ -21,6 +21,23 @@ after a re-provision.
 
 ## Pre-flight (do this 20 minutes before, not during)
 
+**Check your IP first.** The security groups allow exactly one address, and a
+home or ISP address changes without warning — ours changed overnight mid-lab and
+locked us out of both hosts. The symptom is not an error, it is *everything
+timing out*, which is a terrible thing to start diagnosing in front of an
+assessor.
+
+```bash
+# does the SG still allow you?
+curl -s https://checkip.amazonaws.com
+# if it has changed, re-apply -- this is safe and takes ~15s, nothing is replaced
+cd infra && terraform apply -auto-approve \
+  -var "admin_cidr=$(curl -s https://checkip.amazonaws.com)/32"
+```
+
+`admin_cidr` is deliberately not stored in `terraform.tfvars`, so every apply
+looks it up fresh rather than reusing a stale value.
+
 | Check | Command | Want |
 |---|---|---|
 | Jenkins answers | `curl -sI $JENKINS/login \| head -1` | `200` |
