@@ -25,16 +25,40 @@ Spring Boot `3.2.5` with Tomcat overridden to `10.1.59`.
 `scripts/availability-probe.sh` polling `/health` through nginx at 200 ms
 intervals:
 
-| Event | Window | Samples | Non-200 |
-|---|---|---|---|
-| Full release, `main` #6 (switch at 18:43:22, 969 ms) | 18:42:29 → 18:43:37 | 94 | **0** |
-| Rollback, blue → green | 10:08:16 → 10:08:25 | 15 | **0** |
+| Event | Probe location | Interval | Samples | Non-200 |
+|---|---|---|---|---|
+| Rollback, blue → green | **inside AWS** (Jenkins host → target private IP) | 100 ms | 200 | **0** |
+| Full release, `main` #6 (969 ms switch) | laptop | 200 ms | 94 | **0** |
+| Rollback, blue → green | laptop | 200 ms | 15 | **0** |
+| Full release, `main` #2 (989 ms switch) | laptop | 200 ms | 116 | 2 — **not the service**, see below |
 
 "Zero downtime" should be a measurement, not an adjective. Reproduce with:
 
 ```bash
 ./scripts/availability-probe.sh http://<target>   # then release or roll back
 ```
+
+### Where you measure from changes what you measure
+
+One run showed 2 failures out of 116. They were **not** dropped by the service,
+and the reasoning is worth keeping because the same thing will happen in any live
+demo run over a home connection:
+
+- The failures were at `10:07:30` and `10:07:32`. The switch ran `10:07:12` to
+  `10:07:13` and the build finished at `10:07:14` — so they landed **16 seconds
+  after** traffic had already moved.
+- The sample gaps were 2.2 s against a normal 0.7 s, meaning curl was hitting its
+  2-second timeout rather than receiving an error.
+- Decisively, the target's nginx access log shows **every request it received
+  answered `200` with `rt=0.003`**, and a gap from `10:07:30` to `10:07:35`. The
+  requests never arrived.
+
+So the loss was on the path from a home ISP to AWS. The authoritative number is
+the first row of the table: probing from inside AWS, at a tighter interval, across
+a rollback — 200 samples, zero failures.
+
+**If you see failures during a live walkthrough, check the access log before
+conceding anything.** A request that is not in it never reached the service.
 
 ## The vulnerability the gate caught on its first run
 

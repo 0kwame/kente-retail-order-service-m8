@@ -9,6 +9,20 @@
 #
 #   ./scripts/availability-probe.sh http://<target>
 #   ./scripts/availability-probe.sh http://<target> 0.1     # tighter interval
+#
+# WHERE YOU RUN THIS CHANGES WHAT IT MEASURES. From a laptop it measures your
+# home connection as well as the service, and a couple of 2-second timeouts from
+# ordinary packet loss look exactly like dropped requests. That happened while
+# verifying this pipeline: two failures 16 seconds AFTER the switch had already
+# completed.
+#
+# The target's own log is the arbiter -- if a request is not in it, it never
+# arrived and the loss was upstream of AWS:
+#
+#   ssh ec2-user@<target> 'sudo tail -40 /var/log/nginx/access.log'
+#
+# For a number you can defend, run this ON the Jenkins host against the target's
+# PRIVATE ip, which takes the internet out of the measurement entirely.
 
 set -uo pipefail
 
