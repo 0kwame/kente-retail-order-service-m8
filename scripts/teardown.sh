@@ -15,6 +15,11 @@ echo "export anything you still need for the submission first (docs/walkthrough.
 read -r -p "Type 'destroy' to continue: " reply
 [[ $reply == "destroy" ]] || { echo "aborted"; exit 1; }
 
-terraform destroy -auto-approve
+# admin_cidr is not stored in terraform.tfvars on purpose (it goes stale), but
+# `destroy` still requires every variable to be set even though it uses none of
+# them. A placeholder keeps teardown working with no network lookup, which
+# matters: teardown must not be the thing that fails when you are trying to stop
+# paying for something.
+terraform destroy -auto-approve -var "admin_cidr=127.0.0.1/32"
 rm -f ./kente-cicd-key.pem
 echo "teardown: done. Nothing left running."
