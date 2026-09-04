@@ -1,8 +1,13 @@
 // Kente Retail -- order-service pipeline.
 //
-// Build -> Test -> Containerize -> Security Scan -> Approve -> Deploy to the
-// idle colour -> Switch traffic -> Verify. On main only, the last four run;
+// Build -> Test -> Containerize -> Security Scan -> Deploy to the idle colour
+// -> Approve -> Switch traffic -> Verify. On main only, the last four run;
 // every other branch stops after the scan.
+//
+// The approval gate sits AFTER the idle deploy on purpose: by the time a human
+// is asked, the new version is already running and already smoke-tested on a
+// colour serving no traffic, so the question is "shall this become live?"
+// rather than "shall we start?".
 //
 // All three gaps in the seeded pipeline are closed:
 //   1. Security Scan gates on CRITICAL findings and cannot be passed by a
@@ -15,8 +20,8 @@
 // docs/assumptions-log.md:
 //   * Jenkins runs as a container it builds itself, on its own EC2 host
 //     (infra/jenkins/). It is not assumed to pre-exist.
-//   * One manual approval, immediately before traffic moves, on main only.
-//     Everything before it is reversible and traffic-free.
+//   * One manual approval, immediately before traffic moves and after the idle
+//     deploy, on main only. Everything before it is reversible and traffic-free.
 //
 // DEPLOY_HOST is a controller-wide env var set by JCasC from Terraform, so
 // nothing in this file is pinned to one environment.
@@ -150,32 +155,6 @@ pipeline {
             }
         }
 
-        stage('Approve Release') {
-            // On main only, and deliberately here rather than earlier: build,
-            // test, scan and the deploy to the idle colour are all reversible
-            // and touch no customer traffic, so gating them only slows down
-            // feedback. The switch is the moment that matters, so that is the
-            // moment a human signs off. Reasoning in docs/assumptions-log.md.
-            //
-            // Known ceiling: this holds an executor while it waits. Fine at two
-            // executors and one team; move to `agent none` for this stage if the
-            // controller ever gets busy enough for that to queue real work.
-            when { branch 'main' }
-            options {
-                timeout(time: 30, unit: 'MINUTES')
-            }
-            steps {
-                script {
-                    def approver = input(
-                        message: "Deploy ${env.IMAGE_NAME}:${env.IMAGE_TAG} to ${env.DEPLOY_HOST}? " +
-                                 "The idle colour will be smoke-tested before any traffic moves.",
-                        ok: 'Deploy',
-                        submitterParameter: 'APPROVER')
-                    echo "Release approved by: ${approver}"
-                }
-            }
-        }
-
         stage('Deploy (idle colour)') {
             // Feature branches build, test and scan but never touch the deploy
             // target. The two broken/* branches are supposed to die above this
@@ -220,6 +199,45 @@ pipeline {
                         ssh ${SSH_OPTS} "deploy@${DEPLOY_HOST}" \
                             "/usr/local/bin/smoke.sh http://127.0.0.1:${IDLE_PORT}"
                     '''
+                }
+            }
+        }
+
+        stage('Approve Release') {
+            // On main only, and deliberately HERE -- after the deploy to the idle
+            // colour, immediately before traffic moves.
+            //
+            // Everything above this line is reversible and reaches no customer:
+            // build, test, scan, and a deploy to a colour that is serving nobody.
+            // Gating any of it only slows feedback, and slow feedback is what
+            // makes people batch changes into a Saturday-night release.
+            //
+            // Placing the gate here rather than before the deploy is what makes
+            // the question worth asking. By now the new version is ALREADY
+            // running on the idle colour and has ALREADY passed the behavioural
+            // smoke test, so the approver is answering "shall this become live?"
+            // with the evidence in hand -- not "shall we start?" with nothing to
+            // look at. They can curl the idle colour before deciding.
+            //
+            // Known ceiling: this holds an executor while it waits. Fine at two
+            // executors and one team; move to `agent none` for this stage if the
+            // controller ever gets busy enough for that to queue real work.
+            //
+            // If it times out or is rejected, the idle colour keeps running the
+            // new image and receives no traffic. The next deploy overwrites it.
+            when { branch 'main' }
+            options {
+                timeout(time: 30, unit: 'MINUTES')
+            }
+            steps {
+                script {
+                    def approver = input(
+                        message: "${env.IMAGE_NAME}:${env.IMAGE_TAG} is running on ${env.IDLE_COLOUR} " +
+                                 "(127.0.0.1:${env.IDLE_PORT}) and passed its smoke test. " +
+                                 "${env.LIVE_COLOUR} is still serving customers. Switch traffic to ${env.IDLE_COLOUR}?",
+                        ok: 'Switch traffic',
+                        submitterParameter: 'APPROVER')
+                    echo "Switch approved by: ${approver}"
                 }
             }
         }

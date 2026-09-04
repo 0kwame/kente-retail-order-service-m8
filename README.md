@@ -48,14 +48,19 @@ cd .. && ./scripts/bootstrap-jenkins.sh
 ## How a release works
 
 ```
-                     ┌─ main only ──────────────────────────────────┐
-Checkout → Build → Test → Containerize → Security Scan → Approve → Deploy      → Switch  → Verify
-                                              │                      (idle       (nginx
-                                              │                       colour,     upstream
-                                              │                       smoked      + smoke
-                                         CRITICAL                     first)      via :80)
+                     ┌─ main only ───────────────────────────────────┐
+Checkout → Build → Test → Containerize → Security Scan → Deploy   → Approve → Switch  → Verify
+                                              │           (idle      (human    (nginx
+                                              │            colour,    sees a    upstream
+                                              │            smoked     tested    + smoke
+                                         CRITICAL          first)     build)    via :80)
                                          fails here
 ```
+
+The gate sits **after** the idle deploy, not before it. By the time anyone is
+asked, the new version is already running on the colour serving no traffic and
+has already passed its smoke test — so the question is "shall this become
+live?", answerable by curling the idle port, rather than "shall we start?".
 
 The deploy target runs two containers at all times — `order-service-blue` on
 `127.0.0.1:8081` and `order-service-green` on `127.0.0.1:8082` — with nginx on

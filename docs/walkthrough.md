@@ -112,12 +112,19 @@ Talk through the stages as they go:
 - **Test** — five real assertions, including the one the starter left as
   `assertTrue(true)`.
 - **Security Scan** — two passes. Point out the archived `trivy-report.txt`.
-- **Approve Release** — pause here. *The new version is already running and
-  already smoke-tested on the idle colour. That is why the gate is here and not at
-  the start: the question is "shall this go live", with the evidence already in
-  hand.* Then click Deploy.
 - **Deploy (idle colour)** — note the log line naming which colour is idle, and
-  that the smoke test runs **before** the switch.
+  that the smoke test runs here, **before** the gate and before any traffic.
+- **Approve Release** — pause here, and use the pause. The prompt names the
+  colour and port the new version is already running on, so in another terminal:
+
+  ```bash
+  $SSH ec2-user@$TARGET 'curl -s http://127.0.0.1:8082/api/orders'   # the idle colour: new version
+  curl -s http://$TARGET/api/orders                                   # customers: still the old one
+  ```
+
+  *Two versions of the service, on one host, and customers are on the old one.
+  That is why the gate is here and not at the start: the question is "shall this
+  become live", with the evidence already in hand.* Then click **Switch traffic**.
 - **Switch Traffic** — the `200`s in the other terminal do not break.
 
 ## 4 · The broken commit is blocked (3 min)
