@@ -32,9 +32,14 @@ variable "admin_cidr" {
 }
 
 variable "repo_url" {
-  description = "Public HTTPS clone URL. Both hosts clone it to get their own bootstrap scripts."
+  description = <<-DESC
+    Public HTTPS clone URL. Both hosts clone it in user_data to get their own
+    bootstrap scripts, with no credentials -- so this repository must be public.
+    If it is ever made private, user_data needs a deploy key or a PAT and the
+    clone stops being the simple thing it is today.
+  DESC
   type        = string
-  default     = "https://github.com/josephakayesi/kente-retail-order-service.git"
+  default     = "https://github.com/0kwame/kente-retail-order-service.git"
 }
 
 variable "repo_branch" {

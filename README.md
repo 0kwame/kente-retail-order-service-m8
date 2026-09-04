@@ -44,6 +44,7 @@ cd .. && ./scripts/bootstrap-jenkins.sh
 | `infra/` | Terraform for both hosts, plus the Jenkins image, plugin list and JCasC config. |
 | `scripts/` | Operator entry points: bootstrap, teardown, hardcoded-secret check, availability probe. |
 | `docs/` | Executive summary, deployment-strategy memo, assumptions log, AI log, Jenkins setup, walkthrough, incident report, verified evidence. |
+| `docs/evidence/` | Raw Jenkins console logs and Trivy reports from the real runs, exported before teardown. The red builds, unedited. |
 
 ## How a release works
 

@@ -1,0 +1,274 @@
+Branch indexing
+ > git rev-parse --resolve-git-dir /var/jenkins_home/caches/git-e756c7663f1f415eb21eccc9b18ba622/.git # timeout=10
+Setting origin to https://github.com/josephakayesi/kente-retail-order-service.git
+ > git config remote.origin.url https://github.com/josephakayesi/kente-retail-order-service.git # timeout=10
+Fetching origin...
+Fetching upstream changes from origin
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git config --get remote.origin.url # timeout=10
+ > git fetch --no-tags --force --progress -- origin +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/broken/order-id-collision
+Seen branch in repository origin/broken/vulnerable-dependency
+Seen branch in repository origin/main
+Seen 3 remote branches
+Obtained Jenkinsfile from 06ea99634900161d2fc24912fe62dd9ecc9a64af
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Still waiting to schedule task
+Waiting for next available executor
+Running on Jenkins in /var/jenkins_home/workspace/ervice_broken_order-id-collision
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning with configured refspecs honoured and without tags
+Cloning repository https://github.com/josephakayesi/kente-retail-order-service.git
+ > git init /var/jenkins_home/workspace/ervice_broken_order-id-collision # timeout=10
+Fetching upstream changes from https://github.com/josephakayesi/kente-retail-order-service.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --no-tags --force --progress -- https://github.com/josephakayesi/kente-retail-order-service.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/josephakayesi/kente-retail-order-service.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Checking out Revision 06ea99634900161d2fc24912fe62dd9ecc9a64af (broken/order-id-collision)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 06ea99634900161d2fc24912fe62dd9ecc9a64af # timeout=10
+Commit message: "Tidy up order ID sequence to start at ORD-1001"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-09-03T23:56:12.355Z] Timeout set to expire in 45 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+[2026-09-03T23:56:12.500Z] Selected Git installation does not exist. Using Default
+[2026-09-03T23:56:12.500Z] The recommended git tool is: NONE
+[2026-09-03T23:56:12.500Z] No credentials specified
+[2026-09-03T23:56:12.501Z]  > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/ervice_broken_order-id-collision/.git # timeout=10
+[2026-09-03T23:56:12.512Z] Fetching changes from the remote Git repository
+[2026-09-03T23:56:12.514Z]  > git config remote.origin.url https://github.com/josephakayesi/kente-retail-order-service.git # timeout=10
+[2026-09-03T23:56:12.529Z] Fetching without tags
+[2026-09-03T23:56:12.529Z] Fetching upstream changes from https://github.com/josephakayesi/kente-retail-order-service.git
+[2026-09-03T23:56:12.529Z]  > git --version # timeout=10
+[2026-09-03T23:56:12.543Z]  > git --version # 'git version 2.47.3'
+[2026-09-03T23:56:12.543Z]  > git fetch --no-tags --force --progress -- https://github.com/josephakayesi/kente-retail-order-service.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-09-03T23:56:12.859Z] Checking out Revision 06ea99634900161d2fc24912fe62dd9ecc9a64af (broken/order-id-collision)
+[2026-09-03T23:56:12.859Z]  > git config core.sparsecheckout # timeout=10
+[2026-09-03T23:56:12.874Z]  > git checkout -f 06ea99634900161d2fc24912fe62dd9ecc9a64af # timeout=10
+[2026-09-03T23:56:12.891Z] Commit message: "Tidy up order ID sequence to start at ORD-1001"
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
+[2026-09-03T23:56:13.222Z] + git rev-parse --short=7 HEAD
+[Pipeline] echo
+[2026-09-03T23:56:13.273Z] building kente-retail/order-service:1-06ea996 from broken/order-id-collision
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] sh
+[2026-09-03T23:56:13.687Z] + mvn -B -DskipTests package
+[2026-09-03T23:56:16.924Z] [INFO] Scanning for projects...
+[2026-09-03T23:56:17.475Z] [INFO] 
+[2026-09-03T23:56:17.475Z] [INFO] -------------------< com.kenteretail:order-service >--------------------
+[2026-09-03T23:56:17.475Z] [INFO] Building order-service 0.1.0
+[2026-09-03T23:56:17.475Z] [INFO]   from pom.xml
+[2026-09-03T23:56:17.475Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-09-03T23:56:19.341Z] [INFO] 
+[2026-09-03T23:56:19.341Z] [INFO] --- resources:3.3.1:resources (default-resources) @ order-service ---
+[2026-09-03T23:56:19.898Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/ervice_broken_order-id-collision/src/main/resources
+[2026-09-03T23:56:19.898Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/ervice_broken_order-id-collision/src/main/resources
+[2026-09-03T23:56:19.898Z] [INFO] 
+[2026-09-03T23:56:19.898Z] [INFO] --- compiler:3.11.0:compile (default-compile) @ order-service ---
+[2026-09-03T23:56:20.457Z] [INFO] Changes detected - recompiling the module! :source
+[2026-09-03T23:56:20.457Z] [INFO] Compiling 3 source files with javac [debug release 17] to target/classes
+[2026-09-03T23:56:24.599Z] [INFO] 
+[2026-09-03T23:56:24.599Z] [INFO] --- resources:3.3.1:testResources (default-testResources) @ order-service ---
+[2026-09-03T23:56:24.599Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/ervice_broken_order-id-collision/src/test/resources
+[2026-09-03T23:56:24.599Z] [INFO] 
+[2026-09-03T23:56:24.599Z] [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ order-service ---
+[2026-09-03T23:56:24.599Z] [INFO] Changes detected - recompiling the module! :dependency
+[2026-09-03T23:56:24.599Z] [INFO] Compiling 1 source file with javac [debug release 17] to target/test-classes
+[2026-09-03T23:56:25.519Z] [INFO] 
+[2026-09-03T23:56:25.519Z] [INFO] --- surefire:3.1.2:test (default-test) @ order-service ---
+[2026-09-03T23:56:26.430Z] [INFO] Tests are skipped.
+[2026-09-03T23:56:26.430Z] [INFO] 
+[2026-09-03T23:56:26.430Z] [INFO] --- jar:3.3.0:jar (default-jar) @ order-service ---
+[2026-09-03T23:56:26.989Z] [INFO] Building jar: /var/jenkins_home/workspace/ervice_broken_order-id-collision/target/order-service.jar
+[2026-09-03T23:56:26.989Z] [INFO] 
+[2026-09-03T23:56:26.989Z] [INFO] --- spring-boot:3.2.5:repackage (repackage) @ order-service ---
+[2026-09-03T23:56:27.900Z] [INFO] Replacing main artifact /var/jenkins_home/workspace/ervice_broken_order-id-collision/target/order-service.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[2026-09-03T23:56:27.900Z] [INFO] The original artifact has been renamed to /var/jenkins_home/workspace/ervice_broken_order-id-collision/target/order-service.jar.original
+[2026-09-03T23:56:27.900Z] [INFO] ------------------------------------------------------------------------
+[2026-09-03T23:56:27.900Z] [INFO] BUILD SUCCESS
+[2026-09-03T23:56:27.900Z] [INFO] ------------------------------------------------------------------------
+[2026-09-03T23:56:27.900Z] [INFO] Total time:  11.284 s
+[2026-09-03T23:56:27.900Z] [INFO] Finished at: 2026-09-03T23:56:27Z
+[2026-09-03T23:56:27.900Z] [INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
+[2026-09-03T23:56:28.360Z] + mvn -B test
+[2026-09-03T23:56:31.592Z] [INFO] Scanning for projects...
+[2026-09-03T23:56:32.149Z] [INFO] 
+[2026-09-03T23:56:32.149Z] [INFO] -------------------< com.kenteretail:order-service >--------------------
+[2026-09-03T23:56:32.149Z] [INFO] Building order-service 0.1.0
+[2026-09-03T23:56:32.149Z] [INFO]   from pom.xml
+[2026-09-03T23:56:32.149Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-09-03T23:56:32.700Z] [INFO] 
+[2026-09-03T23:56:32.700Z] [INFO] --- resources:3.3.1:resources (default-resources) @ order-service ---
+[2026-09-03T23:56:33.254Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/ervice_broken_order-id-collision/src/main/resources
+[2026-09-03T23:56:33.254Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/ervice_broken_order-id-collision/src/main/resources
+[2026-09-03T23:56:33.254Z] [INFO] 
+[2026-09-03T23:56:33.254Z] [INFO] --- compiler:3.11.0:compile (default-compile) @ order-service ---
+[2026-09-03T23:56:33.505Z] [INFO] Nothing to compile - all classes are up to date
+[2026-09-03T23:56:33.505Z] [INFO] 
+[2026-09-03T23:56:33.505Z] [INFO] --- resources:3.3.1:testResources (default-testResources) @ order-service ---
+[2026-09-03T23:56:33.505Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/ervice_broken_order-id-collision/src/test/resources
+[2026-09-03T23:56:33.505Z] [INFO] 
+[2026-09-03T23:56:33.505Z] [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ order-service ---
+[2026-09-03T23:56:33.505Z] [INFO] Nothing to compile - all classes are up to date
+[2026-09-03T23:56:33.505Z] [INFO] 
+[2026-09-03T23:56:33.505Z] [INFO] --- surefire:3.1.2:test (default-test) @ order-service ---
+[2026-09-03T23:56:34.057Z] [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[2026-09-03T23:56:34.309Z] [INFO] 
+[2026-09-03T23:56:34.309Z] [INFO] -------------------------------------------------------
+[2026-09-03T23:56:34.309Z] [INFO]  T E S T S
+[2026-09-03T23:56:34.309Z] [INFO] -------------------------------------------------------
+[2026-09-03T23:56:35.661Z] [INFO] Running com.kenteretail.orderservice.OrderControllerTest
+[2026-09-03T23:56:35.661Z] [ERROR] Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.155 s <<< FAILURE! -- in com.kenteretail.orderservice.OrderControllerTest
+[2026-09-03T23:56:35.661Z] [ERROR] com.kenteretail.orderservice.OrderControllerTest.generatedIdsNeverCollideWithSeedFixtures -- Time elapsed: 0.017 s <<< FAILURE!
+[2026-09-03T23:56:35.661Z] org.opentest4j.AssertionFailedError: generated order ID collided with a seed fixture: ORD-1001 ==> expected: <false> but was: <true>
+[2026-09-03T23:56:35.661Z] 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+[2026-09-03T23:56:35.661Z] 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+[2026-09-03T23:56:35.661Z] 	at org.junit.jupiter.api.AssertFalse.failNotFalse(AssertFalse.java:63)
+[2026-09-03T23:56:35.661Z] 	at org.junit.jupiter.api.AssertFalse.assertFalse(AssertFalse.java:36)
+[2026-09-03T23:56:35.661Z] 	at org.junit.jupiter.api.Assertions.assertFalse(Assertions.java:239)
+[2026-09-03T23:56:35.661Z] 	at com.kenteretail.orderservice.OrderControllerTest.generatedIdsNeverCollideWithSeedFixtures(OrderControllerTest.java:50)
+[2026-09-03T23:56:35.661Z] 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+[2026-09-03T23:56:35.661Z] 	at java.base/java.util.ArrayList.forEach(Unknown Source)
+[2026-09-03T23:56:35.661Z] 	at java.base/java.util.ArrayList.forEach(Unknown Source)
+[2026-09-03T23:56:35.661Z] 
+[2026-09-03T23:56:35.661Z] [INFO] 
+[2026-09-03T23:56:35.661Z] [INFO] Results:
+[2026-09-03T23:56:35.661Z] [INFO] 
+[2026-09-03T23:56:35.661Z] [ERROR] Failures: 
+[2026-09-03T23:56:35.661Z] [ERROR]   OrderControllerTest.generatedIdsNeverCollideWithSeedFixtures:50 generated order ID collided with a seed fixture: ORD-1001 ==> expected: <false> but was: <true>
+[2026-09-03T23:56:35.661Z] [INFO] 
+[2026-09-03T23:56:35.661Z] [ERROR] Tests run: 5, Failures: 1, Errors: 0, Skipped: 0
+[2026-09-03T23:56:35.661Z] [INFO] 
+[2026-09-03T23:56:35.661Z] [INFO] ------------------------------------------------------------------------
+[2026-09-03T23:56:35.661Z] [INFO] BUILD FAILURE
+[2026-09-03T23:56:35.661Z] [INFO] ------------------------------------------------------------------------
+[2026-09-03T23:56:35.661Z] [INFO] Total time:  4.446 s
+[2026-09-03T23:56:35.661Z] [INFO] Finished at: 2026-09-03T23:56:35Z
+[2026-09-03T23:56:35.661Z] [INFO] ------------------------------------------------------------------------
+[2026-09-03T23:56:35.661Z] [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.1.2:test (default-test) on project order-service: There are test failures.
+[2026-09-03T23:56:35.661Z] [ERROR] 
+[2026-09-03T23:56:35.661Z] [ERROR] Please refer to /var/jenkins_home/workspace/ervice_broken_order-id-collision/target/surefire-reports for the individual test results.
+[2026-09-03T23:56:35.661Z] [ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[2026-09-03T23:56:35.661Z] [ERROR] -> [Help 1]
+[2026-09-03T23:56:35.661Z] [ERROR] 
+[2026-09-03T23:56:35.661Z] [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[2026-09-03T23:56:35.661Z] [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[2026-09-03T23:56:35.661Z] [ERROR] 
+[2026-09-03T23:56:35.661Z] [ERROR] For more information about the errors and possible solutions, please read the following articles:
+[2026-09-03T23:56:35.661Z] [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+Post stage
+[Pipeline] junit
+[2026-09-03T23:56:35.703Z] Recording test results
+[2026-09-03T23:56:35.732Z] [Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Containerize)
+Stage "Containerize" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Security Scan)
+Stage "Security Scan" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Approve Release)
+Stage "Approve Release" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy (idle colour))
+Stage "Deploy (idle colour)" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Switch Traffic)
+Stage "Switch Traffic" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verify)
+Stage "Verify" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] cleanWs
+[2026-09-03T23:56:36.775Z] [WS-CLEANUP] Deleting project workspace...
+[2026-09-03T23:56:36.775Z] [WS-CLEANUP] Deferred wipeout is used...
+[2026-09-03T23:56:36.786Z] [WS-CLEANUP] done
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-09-03T23:56:36.927Z] Failed before any traffic moved. Nothing to roll back.
+[Pipeline] withCredentials
+[2026-09-03T23:56:37.019Z] Masking supported pattern matches of $SLACK_WEBHOOK
+[Pipeline] {
+[Pipeline] sh
+[2026-09-03T23:56:37.341Z] + set -eu
+[2026-09-03T23:56:37.341Z] + [ -z  ]
+[2026-09-03T23:56:37.341Z] + echo slack: no webhook configured -- skipping notification
+[2026-09-03T23:56:37.341Z] slack: no webhook configured -- skipping notification
+[2026-09-03T23:56:37.341Z] + exit 0
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE

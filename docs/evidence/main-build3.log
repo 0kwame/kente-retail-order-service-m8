@@ -1,0 +1,1026 @@
+Branch indexing
+ > git rev-parse --resolve-git-dir /var/jenkins_home/caches/git-e756c7663f1f415eb21eccc9b18ba622/.git # timeout=10
+Setting origin to https://github.com/josephakayesi/kente-retail-order-service.git
+ > git config remote.origin.url https://github.com/josephakayesi/kente-retail-order-service.git # timeout=10
+Fetching origin...
+Fetching upstream changes from origin
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git config --get remote.origin.url # timeout=10
+ > git fetch --no-tags --force --progress -- origin +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/broken/order-id-collision
+Seen branch in repository origin/broken/vulnerable-dependency
+Seen branch in repository origin/main
+Seen 3 remote branches
+Obtained Jenkinsfile from d368d7b34fe97d54e32154689cf61ff43d8792df
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/order-service_main
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning with configured refspecs honoured and without tags
+Cloning repository https://github.com/josephakayesi/kente-retail-order-service.git
+ > git init /var/jenkins_home/workspace/order-service_main # timeout=10
+Fetching upstream changes from https://github.com/josephakayesi/kente-retail-order-service.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --no-tags --force --progress -- https://github.com/josephakayesi/kente-retail-order-service.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/josephakayesi/kente-retail-order-service.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Checking out Revision d368d7b34fe97d54e32154689cf61ff43d8792df (main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f d368d7b34fe97d54e32154689cf61ff43d8792df # timeout=10
+Commit message: "feat(orders): return currency on order responses"
+ > git rev-list --no-walk 89ba7bc223500df3d2bb4849e699b4faa9bd9777 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-09-04T00:45:21.097Z] Timeout set to expire in 45 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+[2026-09-04T00:45:21.199Z] Selected Git installation does not exist. Using Default
+[2026-09-04T00:45:21.199Z] The recommended git tool is: NONE
+[2026-09-04T00:45:21.199Z] No credentials specified
+[2026-09-04T00:45:21.200Z]  > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/order-service_main/.git # timeout=10
+[2026-09-04T00:45:21.207Z] Fetching changes from the remote Git repository
+[2026-09-04T00:45:21.212Z]  > git config remote.origin.url https://github.com/josephakayesi/kente-retail-order-service.git # timeout=10
+[2026-09-04T00:45:21.218Z] Fetching without tags
+[2026-09-04T00:45:21.218Z] Fetching upstream changes from https://github.com/josephakayesi/kente-retail-order-service.git
+[2026-09-04T00:45:21.218Z]  > git --version # timeout=10
+[2026-09-04T00:45:21.223Z]  > git --version # 'git version 2.47.3'
+[2026-09-04T00:45:21.223Z]  > git fetch --no-tags --force --progress -- https://github.com/josephakayesi/kente-retail-order-service.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-09-04T00:45:21.395Z] Checking out Revision d368d7b34fe97d54e32154689cf61ff43d8792df (main)
+[2026-09-04T00:45:21.395Z]  > git config core.sparsecheckout # timeout=10
+[2026-09-04T00:45:21.399Z]  > git checkout -f d368d7b34fe97d54e32154689cf61ff43d8792df # timeout=10
+[2026-09-04T00:45:21.406Z] Commit message: "feat(orders): return currency on order responses"
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
+[2026-09-04T00:45:21.719Z] + git rev-parse --short=7 HEAD
+[Pipeline] echo
+[2026-09-04T00:45:21.761Z] building kente-retail/order-service:3-d368d7b from main
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] sh
+[2026-09-04T00:45:22.154Z] + mvn -B -DskipTests package
+[2026-09-04T00:45:24.639Z] [INFO] Scanning for projects...
+[2026-09-04T00:45:25.550Z] [INFO] 
+[2026-09-04T00:45:25.550Z] [INFO] -------------------< com.kenteretail:order-service >--------------------
+[2026-09-04T00:45:25.550Z] [INFO] Building order-service 0.1.0
+[2026-09-04T00:45:25.550Z] [INFO]   from pom.xml
+[2026-09-04T00:45:25.550Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-09-04T00:45:26.105Z] [INFO] 
+[2026-09-04T00:45:26.105Z] [INFO] --- resources:3.3.1:resources (default-resources) @ order-service ---
+[2026-09-04T00:45:26.356Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/order-service_main/src/main/resources
+[2026-09-04T00:45:26.356Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/order-service_main/src/main/resources
+[2026-09-04T00:45:26.356Z] [INFO] 
+[2026-09-04T00:45:26.356Z] [INFO] --- compiler:3.11.0:compile (default-compile) @ order-service ---
+[2026-09-04T00:45:26.615Z] [INFO] Changes detected - recompiling the module! :source
+[2026-09-04T00:45:26.615Z] [INFO] Compiling 3 source files with javac [debug release 17] to target/classes
+[2026-09-04T00:45:28.477Z] [INFO] 
+[2026-09-04T00:45:28.477Z] [INFO] --- resources:3.3.1:testResources (default-testResources) @ order-service ---
+[2026-09-04T00:45:28.477Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/order-service_main/src/test/resources
+[2026-09-04T00:45:28.477Z] [INFO] 
+[2026-09-04T00:45:28.477Z] [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ order-service ---
+[2026-09-04T00:45:28.477Z] [INFO] Changes detected - recompiling the module! :dependency
+[2026-09-04T00:45:28.477Z] [INFO] Compiling 1 source file with javac [debug release 17] to target/test-classes
+[2026-09-04T00:45:29.028Z] [INFO] 
+[2026-09-04T00:45:29.028Z] [INFO] --- surefire:3.1.2:test (default-test) @ order-service ---
+[2026-09-04T00:45:29.593Z] [INFO] Tests are skipped.
+[2026-09-04T00:45:29.593Z] [INFO] 
+[2026-09-04T00:45:29.593Z] [INFO] --- jar:3.3.0:jar (default-jar) @ order-service ---
+[2026-09-04T00:45:29.849Z] [INFO] Building jar: /var/jenkins_home/workspace/order-service_main/target/order-service.jar
+[2026-09-04T00:45:29.849Z] [INFO] 
+[2026-09-04T00:45:29.849Z] [INFO] --- spring-boot:3.2.5:repackage (repackage) @ order-service ---
+[2026-09-04T00:45:30.760Z] [INFO] Replacing main artifact /var/jenkins_home/workspace/order-service_main/target/order-service.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[2026-09-04T00:45:30.760Z] [INFO] The original artifact has been renamed to /var/jenkins_home/workspace/order-service_main/target/order-service.jar.original
+[2026-09-04T00:45:30.760Z] [INFO] ------------------------------------------------------------------------
+[2026-09-04T00:45:30.760Z] [INFO] BUILD SUCCESS
+[2026-09-04T00:45:30.760Z] [INFO] ------------------------------------------------------------------------
+[2026-09-04T00:45:30.760Z] [INFO] Total time:  6.073 s
+[2026-09-04T00:45:30.760Z] [INFO] Finished at: 2026-09-04T00:45:30Z
+[2026-09-04T00:45:30.760Z] [INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
+[2026-09-04T00:45:31.114Z] + mvn -B test
+[2026-09-04T00:45:32.975Z] [INFO] Scanning for projects...
+[2026-09-04T00:45:33.526Z] [INFO] 
+[2026-09-04T00:45:33.526Z] [INFO] -------------------< com.kenteretail:order-service >--------------------
+[2026-09-04T00:45:33.526Z] [INFO] Building order-service 0.1.0
+[2026-09-04T00:45:33.526Z] [INFO]   from pom.xml
+[2026-09-04T00:45:33.526Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-09-04T00:45:34.077Z] [INFO] 
+[2026-09-04T00:45:34.077Z] [INFO] --- resources:3.3.1:resources (default-resources) @ order-service ---
+[2026-09-04T00:45:34.327Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/order-service_main/src/main/resources
+[2026-09-04T00:45:34.327Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/order-service_main/src/main/resources
+[2026-09-04T00:45:34.327Z] [INFO] 
+[2026-09-04T00:45:34.327Z] [INFO] --- compiler:3.11.0:compile (default-compile) @ order-service ---
+[2026-09-04T00:45:34.578Z] [INFO] Nothing to compile - all classes are up to date
+[2026-09-04T00:45:34.578Z] [INFO] 
+[2026-09-04T00:45:34.578Z] [INFO] --- resources:3.3.1:testResources (default-testResources) @ order-service ---
+[2026-09-04T00:45:34.578Z] [INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/order-service_main/src/test/resources
+[2026-09-04T00:45:34.578Z] [INFO] 
+[2026-09-04T00:45:34.578Z] [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ order-service ---
+[2026-09-04T00:45:34.578Z] [INFO] Nothing to compile - all classes are up to date
+[2026-09-04T00:45:34.578Z] [INFO] 
+[2026-09-04T00:45:34.578Z] [INFO] --- surefire:3.1.2:test (default-test) @ order-service ---
+[2026-09-04T00:45:34.828Z] [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[2026-09-04T00:45:35.079Z] [INFO] 
+[2026-09-04T00:45:35.079Z] [INFO] -------------------------------------------------------
+[2026-09-04T00:45:35.079Z] [INFO]  T E S T S
+[2026-09-04T00:45:35.079Z] [INFO] -------------------------------------------------------
+[2026-09-04T00:45:35.990Z] [INFO] Running com.kenteretail.orderservice.OrderControllerTest
+[2026-09-04T00:45:35.990Z] [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.093 s -- in com.kenteretail.orderservice.OrderControllerTest
+[2026-09-04T00:45:35.990Z] [INFO] 
+[2026-09-04T00:45:35.990Z] [INFO] Results:
+[2026-09-04T00:45:35.990Z] [INFO] 
+[2026-09-04T00:45:35.990Z] [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[2026-09-04T00:45:35.990Z] [INFO] 
+[2026-09-04T00:45:35.990Z] [INFO] ------------------------------------------------------------------------
+[2026-09-04T00:45:35.990Z] [INFO] BUILD SUCCESS
+[2026-09-04T00:45:35.990Z] [INFO] ------------------------------------------------------------------------
+[2026-09-04T00:45:35.990Z] [INFO] Total time:  3.086 s
+[2026-09-04T00:45:35.990Z] [INFO] Finished at: 2026-09-04T00:45:35Z
+[2026-09-04T00:45:35.990Z] [INFO] ------------------------------------------------------------------------
+Post stage
+[Pipeline] junit
+[2026-09-04T00:45:36.013Z] Recording test results
+[2026-09-04T00:45:36.025Z] [Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Containerize)
+[Pipeline] sh
+[2026-09-04T00:45:36.390Z] + docker build -t kente-retail/order-service:3-d368d7b .
+[2026-09-04T00:45:36.390Z] DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+[2026-09-04T00:45:36.390Z]             Install the buildx component to build images with BuildKit:
+[2026-09-04T00:45:36.390Z]             https://docs.docker.com/go/buildx/
+[2026-09-04T00:45:36.390Z] 
+[2026-09-04T00:45:36.390Z] Sending build context to Docker daemon  20.36MB[2026-09-04T00:45:36.390Z] 
+[2026-09-04T00:45:36.390Z] Step 1/10 : FROM maven:3.9-eclipse-temurin-17 AS build
+[2026-09-04T00:45:36.390Z]  ---> e16130562213
+[2026-09-04T00:45:36.390Z] Step 2/10 : WORKDIR /app
+[2026-09-04T00:45:36.390Z]  ---> Using cache
+[2026-09-04T00:45:36.390Z]  ---> 111ad01d9cfe
+[2026-09-04T00:45:36.390Z] Step 3/10 : COPY pom.xml .
+[2026-09-04T00:45:36.390Z]  ---> Using cache
+[2026-09-04T00:45:36.390Z]  ---> dc786a48b489
+[2026-09-04T00:45:36.390Z] Step 4/10 : COPY src ./src
+[2026-09-04T00:45:36.641Z]  ---> 5760fd8b79e2
+[2026-09-04T00:45:36.641Z] Step 5/10 : RUN mvn -B -q -DskipTests package
+[2026-09-04T00:45:36.641Z]  ---> Running in 32cda0f75a1c
+[2026-09-04T00:45:58.439Z]  ---> Removed intermediate container 32cda0f75a1c
+[2026-09-04T00:45:58.439Z]  ---> 456df3f2c6f2
+[2026-09-04T00:45:58.439Z] Step 6/10 : FROM eclipse-temurin:17-jre
+[2026-09-04T00:45:58.439Z]  ---> 9a3b1de629c5
+[2026-09-04T00:45:58.439Z] Step 7/10 : WORKDIR /app
+[2026-09-04T00:45:58.439Z]  ---> Using cache
+[2026-09-04T00:45:58.439Z]  ---> 71bffed4183c
+[2026-09-04T00:45:58.439Z] Step 8/10 : COPY --from=build /app/target/order-service.jar app.jar
+[2026-09-04T00:45:58.439Z]  ---> 0067ae15abd6
+[2026-09-04T00:45:58.439Z] Step 9/10 : EXPOSE 8080
+[2026-09-04T00:45:58.439Z]  ---> Running in 4c27251dd7ed
+[2026-09-04T00:45:58.439Z]  ---> Removed intermediate container 4c27251dd7ed
+[2026-09-04T00:45:58.439Z]  ---> bd2681b7761e
+[2026-09-04T00:45:58.439Z] Step 10/10 : ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+[2026-09-04T00:45:58.439Z]  ---> Running in 53424ead448e
+[2026-09-04T00:45:58.439Z]  ---> Removed intermediate container 53424ead448e
+[2026-09-04T00:45:58.439Z]  ---> 20589e19a40b
+[2026-09-04T00:45:58.439Z] Successfully built 20589e19a40b
+[2026-09-04T00:45:58.439Z] Successfully tagged kente-retail/order-service:3-d368d7b
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Security Scan)
+[Pipeline] lock
+[2026-09-04T00:45:58.532Z] Trying to acquire lock on [Resource: trivy-cache]
+[2026-09-04T00:45:58.536Z] Resource [trivy-cache] did not exist. Created.
+[2026-09-04T00:45:58.536Z] Lock acquired on [Resource: trivy-cache]
+[Pipeline] {
+[Pipeline] sh
+[2026-09-04T00:45:58.831Z] + trivy image --download-db-only --timeout 10m --no-progress --skip-version-check
+[Pipeline] sh
+[2026-09-04T00:45:59.352Z] + trivy image --scanners vuln --severity CRITICAL,HIGH,MEDIUM --exit-code 0 --no-progress --skip-version-check --format table --output trivy-report.txt kente-retail/order-service:3-d368d7b
+[2026-09-04T00:45:59.352Z] 2026-09-04T00:45:59Z	INFO	[vuln] Vulnerability scanning is enabled
+[2026-09-04T00:46:09.228Z] 2026-09-04T00:46:08Z	INFO	Detected OS	family="ubuntu" version="26.04"
+[2026-09-04T00:46:09.228Z] 2026-09-04T00:46:08Z	INFO	[ubuntu] Detecting vulnerabilities...	os_version="26.04" pkg_num=140
+[2026-09-04T00:46:09.228Z] 2026-09-04T00:46:08Z	INFO	Number of language-specific files	num=2
+[2026-09-04T00:46:09.228Z] 2026-09-04T00:46:08Z	INFO	[gobinary] Detecting vulnerabilities...
+[2026-09-04T00:46:09.228Z] 2026-09-04T00:46:08Z	INFO	[jar] Detecting vulnerabilities...
+[2026-09-04T00:46:09.228Z] 2026-09-04T00:46:08Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.74/guide/scanner/vulnerability#severity-selection for details.
+[2026-09-04T00:46:09.228Z] 2026-09-04T00:46:08Z	INFO	Table result includes only package filenames. Use '--format json' option to get the full path to the package file.
+[2026-09-04T00:46:09.228Z] + echo --- Trivy report (informational) ---
+[2026-09-04T00:46:09.228Z] --- Trivy report (informational) ---
+[2026-09-04T00:46:09.228Z] + cat trivy-report.txt
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] Report Summary
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] ┌─────────────────────────────────────────────────────┬──────────┬─────────────────┐
+[2026-09-04T00:46:09.228Z] │                       Target                        │   Type   │ Vulnerabilities │
+[2026-09-04T00:46:09.228Z] ├─────────────────────────────────────────────────────┼──────────┼─────────────────┤
+[2026-09-04T00:46:09.228Z] │ kente-retail/order-service:3-d368d7b (ubuntu 26.04) │  ubuntu  │       98        │
+[2026-09-04T00:46:09.228Z] ├─────────────────────────────────────────────────────┼──────────┼─────────────────┤
+[2026-09-04T00:46:09.228Z] │ app/app.jar                                         │   jar    │       30        │
+[2026-09-04T00:46:09.228Z] ├─────────────────────────────────────────────────────┼──────────┼─────────────────┤
+[2026-09-04T00:46:09.228Z] │ usr/bin/pebble                                      │ gobinary │        8        │
+[2026-09-04T00:46:09.228Z] └─────────────────────────────────────────────────────┴──────────┴─────────────────┘
+[2026-09-04T00:46:09.228Z] Legend:
+[2026-09-04T00:46:09.228Z] - '-': Not scanned
+[2026-09-04T00:46:09.228Z] - '0': Clean (no security findings detected)
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] For OSS Maintainers: VEX Notice
+[2026-09-04T00:46:09.228Z] --------------------------------
+[2026-09-04T00:46:09.228Z] If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+[2026-09-04T00:46:09.228Z] VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+[2026-09-04T00:46:09.228Z] Learn more and start using VEX: https://trivy.dev/docs/v0.74/guide/supply-chain/vex/repo#publishing-vex-documents
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] kente-retail/order-service:3-d368d7b (ubuntu 26.04)
+[2026-09-04T00:46:09.228Z] ===================================================
+[2026-09-04T00:46:09.228Z] Total: 98 (MEDIUM: 98, HIGH: 0, CRITICAL: 0)
+[2026-09-04T00:46:09.228Z] 
+[2026-09-04T00:46:09.228Z] ┌─────────────────────────┬────────────────┬──────────┬──────────┬──────────────────────────────────┬────────────────────┬──────────────────────────────────────────────────────────────┐
+[2026-09-04T00:46:09.228Z] │         Library         │ Vulnerability  │ Severity │  Status  │        Installed Version         │   Fixed Version    │                            Title                             │
+[2026-09-04T00:46:09.228Z] ├─────────────────────────┼────────────────┼──────────┼──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.228Z] │ bsdutils                │ CVE-2026-13595 │ MEDIUM   │ fixed    │ 1:2.41.3-3ubuntu2                │ 2.41.3-3ubuntu2.2  │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.228Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.228Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.228Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.228Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.228Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.228Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.228Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.228Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.228Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ diffutils               │ CVE-2026-53910 │          │          │ 1:3.12-1                         │ 1:3.12-1ubuntu0.1  │ diffutils: heap‑based buffer overflow due to multiple signed │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ integer overflows in line‑mapping...                         │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53910                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ gnu-coreutils           │ CVE-2026-56391 │          │          │ 9.7-3ubuntu2                     │ 9.7-3ubuntu2.1     │ coreutils: GNU coreutils uniq: Denial of Service and         │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ information disclosure via out-of-bounds...                  │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-56391                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libattr1                │ CVE-2026-54371 │          │          │ 1:2.5.2-4                        │ 1:2.5.2-4ubuntu0.1 │ attr: attr: Symlink Traversal Privilege Escalation via       │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ getfattr and setfattr                                        │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-54371                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libblkid1               │ CVE-2026-13595 │          │          │ 2.41.3-3ubuntu2                  │ 2.41.3-3ubuntu2.2  │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          ├──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libexpat1               │ CVE-2025-66382 │          │ affected │ 2.7.4-1                          │                    │ libexpat: libexpat: Denial of service via crafted file       │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ processing                                                   │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2025-66382                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          ├──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libmount1               │ CVE-2026-13595 │          │ fixed    │ 2.41.3-3ubuntu2                  │ 2.41.3-3ubuntu2.2  │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          ├──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libp11-kit0             │ CVE-2026-13757 │          │ affected │ 0.26.2-2                         │                    │ p11-kit: Stack exhaustion via unbounded recursion in RPC     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ attribute parsing                                            │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13757                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          ├──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libsmartcols1           │ CVE-2026-13595 │          │ fixed    │ 2.41.3-3ubuntu2                  │ 2.41.3-3ubuntu2.2  │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libssl3t64              │ CVE-2026-14456 │          │          │ 3.5.5-1ubuntu3.3                 │ 3.5.5-1ubuntu3.4   │ openssl: OpenSSL: Denial of Service via unbounded memory     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ growth in QUIC server...                                     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-14456                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-18798 │          │          │                                  │                    │ openssl: QUIC server may trigger double free when processing │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ INITIAL packet                                               │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-18798                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-63072 │          │          │                                  │                    │ openssl: heap buffer overflow in CMS key unwrapping          │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-63072                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-63076 │          │          │                                  │                    │ openssl: invalid pointer dereference in CMP server via       │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ crafted protectionAlg                                        │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-63076                   │
+[2026-09-04T00:46:09.229Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │ libuuid1                │ CVE-2026-13595 │          │          │ 2.41.3-3ubuntu2                  │ 2.41.3-3ubuntu2.2  │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.229Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.229Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.229Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.230Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┤                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │ login                   │ CVE-2026-13595 │          │          │ 1:4.16.0-2+really2.41.3-3ubuntu2 │                    │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.230Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┤                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │ mount                   │ CVE-2026-13595 │          │          │ 2.41.3-3ubuntu2                  │                    │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.230Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.230Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.230Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.231Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │ openssl                 │ CVE-2026-14456 │          │          │ 3.5.5-1ubuntu3.3                 │ 3.5.5-1ubuntu3.4   │ openssl: OpenSSL: Denial of Service via unbounded memory     │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ growth in QUIC server...                                     │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-14456                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-18798 │          │          │                                  │                    │ openssl: QUIC server may trigger double free when processing │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ INITIAL packet                                               │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-18798                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-63072 │          │          │                                  │                    │ openssl: heap buffer overflow in CMS key unwrapping          │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-63072                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-63076 │          │          │                                  │                    │ openssl: invalid pointer dereference in CMP server via       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ crafted protectionAlg                                        │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-63076                   │
+[2026-09-04T00:46:09.231Z] ├─────────────────────────┼────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │ openssl-provider-legacy │ CVE-2026-14456 │          │          │                                  │                    │ openssl: OpenSSL: Denial of Service via unbounded memory     │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ growth in QUIC server...                                     │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-14456                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-18798 │          │          │                                  │                    │ openssl: QUIC server may trigger double free when processing │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ INITIAL packet                                               │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-18798                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-63072 │          │          │                                  │                    │ openssl: heap buffer overflow in CMS key unwrapping          │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-63072                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-63076 │          │          │                                  │                    │ openssl: invalid pointer dereference in CMP server via       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ crafted protectionAlg                                        │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-63076                   │
+[2026-09-04T00:46:09.231Z] ├─────────────────────────┼────────────────┤          ├──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │ p11-kit                 │ CVE-2026-13757 │          │ affected │ 0.26.2-2                         │                    │ p11-kit: Stack exhaustion via unbounded recursion in RPC     │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ attribute parsing                                            │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13757                   │
+[2026-09-04T00:46:09.231Z] ├─────────────────────────┤                │          │          │                                  ├────────────────────┤                                                              │
+[2026-09-04T00:46:09.231Z] │ p11-kit-modules         │                │          │          │                                  │                    │                                                              │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │                                                              │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │                                                              │
+[2026-09-04T00:46:09.231Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │ rust-coreutils          │ CVE-2026-35341 │          │          │ 0.8.0-0ubuntu3                   │                    │ A vulnerability in uutils coreutils mkfifo allows for the    │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ unauthorized ...                                             │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35341                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35344 │          │          │                                  │                    │ The dd utility in uutils coreutils suppresses errors during  │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ file trunc ......                                            │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35344                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35345 │          │          │                                  │                    │ A vulnerability in the tail utility of uutils coreutils      │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ allows for the...                                            │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35345                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35348 │          │          │                                  │                    │ The sort utility in uutils coreutils is vulnerable to a      │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ process panic...                                             │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35348                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35350 │          │          │                                  │                    │ The cp utility in uutils coreutils fails to properly handle  │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ setuid and...                                                │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35350                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35351 │          │          │                                  │                    │ The mv utility in uutils coreutils fails to preserve file    │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ ownership du...                                              │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35351                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35352 │          │          │                                  │                    │ A Time-of-Check to Time-of-Use (TOCTOU) race condition       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ exists in the m ......                                       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35352                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35354 │          │          │                                  │                    │ A Time-of-Check to Time-of-Use (TOCTOU) vulnerability exists │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ in the mv ...                                                │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35354                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35357 │          │          │                                  │                    │ The cp utility in uutils coreutils is vulnerable to an       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ information dis...                                           │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35357                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35359 │          │          │                                  │                    │ A Time-of-Check to Time-of-Use (TOCTOU) vulnerability in the │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ cp utilit ...                                                │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35359                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35360 │          │          │                                  │                    │ The touch utility in uutils coreutils is vulnerable to a     │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ Time-of-Check ......                                         │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35360                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35363 │          │          │                                  │                    │ A vulnerability in the rm utility of uutils coreutils allows │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ the bypas...                                                 │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35363                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35364 │          │          │                                  │                    │ A Time-of-Check to Time-of-Use (TOCTOU) race condition       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ exists in the m ......                                       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35364                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35367 │          │          │                                  │                    │ The nohup utility in uutils coreutils creates its default    │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ output file, ......                                          │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35367                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35368 │          │          │                                  │                    │ A vulnerability exists in the chroot utility of uutils       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ coreutils when ...                                           │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35368                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35370 │          │          │                                  │                    │ The id utility in uutils coreutils miscalculates the groups= │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ section o ......                                             │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35370                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35371 │          │          │                                  │                    │ The id utility in uutils coreutils exhibits incorrect        │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ behavior in its ...                                          │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35371                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35373 │          │          │                                  │                    │ A logic error in the ln utility of uutils coreutils causes   │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ the...                                                       │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35373                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35374 │          │          │                                  │                    │ A Time-of-Check to Time-of-Use (TOCTOU) vulnerability exists │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ in the sp ...                                                │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35374                   │
+[2026-09-04T00:46:09.231Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │                         │ CVE-2026-35377 │          │          │                                  │                    │ A logic error in the env utility of uutils coreutils causes  │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ a...                                                         │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-35377                   │
+[2026-09-04T00:46:09.231Z] ├─────────────────────────┼────────────────┤          │          ├──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.231Z] │ tar                     │ CVE-2026-18477 │          │          │ 1.35+dfsg-4ubuntu0.4             │                    │ tar: tar: TOCTOU in incremental dumpdir 'X' rename handling  │
+[2026-09-04T00:46:09.231Z] │                         │                │          │          │                                  │                    │ allows restore path...                                       │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-18477                   │
+[2026-09-04T00:46:09.232Z] │                         ├────────────────┤          │          │                                  ├────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                         │ CVE-2026-18508 │          │          │                                  │                    │ tar: tar: --one-top-level hardlink targets not confined to   │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ top-level directory enabling arbitrary...                    │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-18508                   │
+[2026-09-04T00:46:09.232Z] ├─────────────────────────┼────────────────┤          ├──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ util-linux              │ CVE-2026-13595 │          │ fixed    │ 2.41.3-3ubuntu2                  │ 2.41.3-3ubuntu2.2  │ util-linux: util-linux: heap use-after-free in libblkid      │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ nested partition probing                                     │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-13595                   │
+[2026-09-04T00:46:09.232Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                         │ CVE-2026-27456 │          │          │                                  │                    │ util-linux: TOCTOU in the mount program when setting up loop │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ devices                                                      │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-27456                   │
+[2026-09-04T00:46:09.232Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                         │ CVE-2026-3184  │          │          │                                  │                    │ util-linux: util-linux: Access control bypass due to         │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ improper hostname canonicalization                           │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-3184                    │
+[2026-09-04T00:46:09.232Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                         │ CVE-2026-53612 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program when     │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ applying post-mount ownership/mode changes...                │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53612                   │
+[2026-09-04T00:46:09.232Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                         │ CVE-2026-53613 │          │          │                                  │                    │ util-linux: util-linux: TOCTOU in the mount program via      │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ ancestor directory swap on...                                │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53613                   │
+[2026-09-04T00:46:09.232Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                         │ CVE-2026-53614 │          │          │                                  │                    │ util-linux: util-linux: SUID mount(8) allows nosuid/noexec   │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ bypass via LIBMOUNT_FORCE_MOUNT2                             │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53614                   │
+[2026-09-04T00:46:09.232Z] │                         ├────────────────┤          │          │                                  │                    ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                         │ CVE-2026-53615 │          │          │                                  │                    │ [Integer Overflow or Wraparound in                           │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ libblkid/src/partitions/dos.c]                               │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2026-53615                   │
+[2026-09-04T00:46:09.232Z] ├─────────────────────────┼────────────────┤          ├──────────┼──────────────────────────────────┼────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ wget                    │ CVE-2021-31879 │          │ affected │ 1.25.0-2ubuntu4.4                │                    │ wget: authorization header disclosure on redirect            │
+[2026-09-04T00:46:09.232Z] │                         │                │          │          │                                  │                    │ https://avd.aquasec.com/nvd/cve-2021-31879                   │
+[2026-09-04T00:46:09.232Z] └─────────────────────────┴────────────────┴──────────┴──────────┴──────────────────────────────────┴────────────────────┴──────────────────────────────────────────────────────────────┘
+[2026-09-04T00:46:09.232Z] 
+[2026-09-04T00:46:09.232Z] Java (jar)
+[2026-09-04T00:46:09.232Z] ==========
+[2026-09-04T00:46:09.232Z] Total: 30 (MEDIUM: 20, HIGH: 10, CRITICAL: 0)
+[2026-09-04T00:46:09.232Z] 
+[2026-09-04T00:46:09.232Z] ┌───────────────────────────────────────────────────────┬─────────────────────┬──────────┬────────┬───────────────────┬───────────────────────────────┬──────────────────────────────────────────────────────────────┐
+[2026-09-04T00:46:09.232Z] │                        Library                        │    Vulnerability    │ Severity │ Status │ Installed Version │         Fixed Version         │                            Title                             │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┼──────────┼────────┼───────────────────┼───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ ch.qos.logback:logback-core (app.jar)                 │ CVE-2024-12798      │ MEDIUM   │ fixed  │ 1.4.14            │ 1.5.13, 1.3.15                │ logback-core: arbitrary code execution via                   │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ JaninoEventEvaluator                                         │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2024-12798                   │
+[2026-09-04T00:46:09.232Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                                                       │ CVE-2025-11226      │          │        │                   │ 1.5.19, 1.3.16                │ ch.qos.logback/logback-core: Conditional abitrary code       │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ execution in logback-core                                    │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2025-11226                   │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ com.fasterxml.jackson.core:jackson-core (app.jar)     │ GHSA-r7wm-3cxj-wff9 │ HIGH     │        │ 2.15.4            │ 2.18.8, 2.21.4                │ jackson-core: Async parser maxNumberLength bypass via        │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ chunked digit accumulation (incomplete fix for...            │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://github.com/advisories/GHSA-r7wm-3cxj-wff9            │
+[2026-09-04T00:46:09.232Z] │                                                       ├─────────────────────┼──────────┤        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                                                       │ CVE-2026-18401      │ MEDIUM   │        │                   │ 2.21.1, 2.18.6                │ tools.jackson.core/jackson-core:                             │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ com.fasterxml.jackson.core/jackson-core: jackson-core:       │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ Denial of Service due to number length bypass in...          │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-18401                   │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┼──────────┤        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ com.fasterxml.jackson.core:jackson-databind (app.jar) │ CVE-2026-54512      │ HIGH     │        │                   │ 2.18.8, 3.1.4, 2.21.4         │ jackson-databind: jackson-databind: Arbitrary code execution │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ via PolymorphicTypeValidator bypass                          │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-54512                   │
+[2026-09-04T00:46:09.232Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                                                       │ CVE-2026-54513      │          │        │                   │ 2.18.8, 2.21.4, 3.1.4         │ jackson-databind: Jackson-databind: Security bypass allows   │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ arbitrary code execution                                     │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-54513                   │
+[2026-09-04T00:46:09.232Z] │                                                       ├─────────────────────┼──────────┤        │                   │                               ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                                                       │ CVE-2026-54514      │ MEDIUM   │        │                   │                               │ jackson-databind: jackson-databind: Information Disclosure   │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ via Eager DNS Resolution                                     │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-54514                   │
+[2026-09-04T00:46:09.232Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                                                       │ CVE-2026-54515      │          │        │                   │ 3.1.4, 2.18.9, 2.21.5, 2.22.1 │ jackson-databind: jackson-databind: Ignored properties can   │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ be unexpectedly modified                                     │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-54515                   │
+[2026-09-04T00:46:09.232Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │                                                       │ CVE-2026-59888      │          │        │                   │ 2.18.8, 2.21.4                │ com.fasterxml.jackson.core/jackson-databind:                 │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ tools.jackson.core/jackson-databind: jackson-databind:       │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ @JsonIgnore bypass in Java Records                           │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-59888                   │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┤          │        ├───────────────────┼───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ org.apache.logging.log4j:log4j-api (app.jar)          │ CVE-2026-49844      │          │        │ 2.21.1            │ 2.25.5, 2.26.1                │ org.apache.logging.log4j/log4j-api: Apache Log4j API:        │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ Malformed JSON output due to improper encoding of...         │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-49844                   │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ org.springframework.boot:spring-boot (app.jar)        │ CVE-2025-22235      │ HIGH     │        │ 3.2.5             │ 3.3.11, 3.4.5                 │ org.springframework.boot/spring-boot: Spring Boot            │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ EndpointRequest.to() creates wrong matcher if actuator       │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ endpoint is not...                                           │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2025-22235                   │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ org.springframework:spring-context (app.jar)          │ CVE-2024-38820      │ MEDIUM   │        │ 6.1.6             │ 6.1.14                        │ The fix for CVE-2022-22968 made disallowedFieldspatterns in  │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ DataBinder ...                                               │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2024-38820                   │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┼──────────┤        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ org.springframework:spring-core (app.jar)             │ CVE-2025-41249      │ HIGH     │        │                   │ 6.2.11                        │ org.springframework/spring-core: Spring Framework Annotation │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ Detection Vulnerability                                      │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2025-41249                   │
+[2026-09-04T00:46:09.232Z] ├───────────────────────────────────────────────────────┼─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.232Z] │ org.springframework:spring-expression (app.jar)       │ CVE-2026-41850      │          │        │                   │ 7.0.8, 6.2.19                 │ spring-framework: Spring Framework: Denial of Service via    │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ specially crafted SpEL expressions                           │
+[2026-09-04T00:46:09.232Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41850                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┼──────────┤        │                   │                               ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41851      │ MEDIUM   │        │                   │                               │ Spring Framework: Spring Framework: Denial of Service via    │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ unbounded cache growth in...                                 │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41851                   │
+[2026-09-04T00:46:09.233Z] ├───────────────────────────────────────────────────────┼─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │ org.springframework:spring-web (app.jar)              │ CVE-2024-38809      │          │        │                   │ 5.3.38, 6.0.23, 6.1.12        │ org.springframework:spring-web: Spring Framework DoS via     │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ conditional HTTP request                                     │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2024-38809                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2024-38820      │          │        │                   │ 6.1.14                        │ The fix for CVE-2022-22968 made disallowedFieldspatterns in  │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ DataBinder ...                                               │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2024-38820                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2025-41234      │          │        │                   │ 6.2.8, 6.1.21                 │ springframework: Reflected download attack in Spring         │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ Framework with non-ASCII headers                             │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2025-41234                   │
+[2026-09-04T00:46:09.233Z] ├───────────────────────────────────────────────────────┼─────────────────────┼──────────┤        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │ org.springframework:spring-webmvc (app.jar)           │ CVE-2024-38816      │ HIGH     │        │                   │ 6.1.13                        │ spring-webmvc: Path Traversal Vulnerability in Spring        │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ Applications Using RouterFunctions and FileSystemResource    │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2024-38816                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2024-38819      │          │        │                   │ 6.1.14                        │ org.springframework:spring-webmvc: Path traversal            │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ vulnerability in functional web frameworks                   │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2024-38819                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41842      │          │        │                   │ 7.0.8, 6.2.19                 │ spring-framework: Spring Framework: Denial of Service when   │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ resolving static resources                                   │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41842                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   │                               ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41845      │          │        │                   │                               │ org.springframework: Spring Framework: Cross-site scripting  │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ (XSS) via incorrect JavaScript escaping                      │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41845                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┼──────────┤        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2025-41242      │ MEDIUM   │        │                   │ 6.2.10                        │ org.springframework/spring-webmvc: Spring Framework MVC path │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ traversal vulnerability                                      │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2025-41242                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-22737      │          │        │                   │ 7.0.6, 6.2.17                 │ Spring Framework: Spring Framework: Information disclosure   │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ via Java scripting engine enabled template...                │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-22737                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-22745      │          │        │                   │ 7.0.7, 6.2.18                 │ spring-webflux: Spring MVC and Spring WebFlux: Denial of     │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ Service via slow static...                                   │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-22745                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   ├───────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41841      │          │        │                   │ 7.0.8, 6.2.19                 │ Spring MVC and WebFlux applications are vulnerable to        │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ Information Disc ...                                         │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41841                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   │                               ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41843      │          │        │                   │                               │ spring-webflux: spring-webmvc: Spring Framework: Information │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ Disclosure via Path Traversal                                │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41843                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   │                               ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41844      │          │        │                   │                               │ Spring Framework: Spring Framework: Open Redirect via        │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ crafted link                                                 │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41844                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   │                               ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41846      │          │        │                   │                               │ Spring Framework: Spring Framework: Cross-site scripting     │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ (XSS) via user-supplied values in JSP...                     │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41846                   │
+[2026-09-04T00:46:09.233Z] │                                                       ├─────────────────────┤          │        │                   │                               ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │                                                       │ CVE-2026-41853      │          │        │                   │                               │ Spring Framework: Spring Framework: Request smuggling        │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ vulnerability in Spring MVC and WebFlux...                   │
+[2026-09-04T00:46:09.233Z] │                                                       │                     │          │        │                   │                               │ https://avd.aquasec.com/nvd/cve-2026-41853                   │
+[2026-09-04T00:46:09.233Z] └───────────────────────────────────────────────────────┴─────────────────────┴──────────┴────────┴───────────────────┴───────────────────────────────┴──────────────────────────────────────────────────────────────┘
+[2026-09-04T00:46:09.233Z] 
+[2026-09-04T00:46:09.233Z] usr/bin/pebble (gobinary)
+[2026-09-04T00:46:09.233Z] =========================
+[2026-09-04T00:46:09.233Z] Total: 8 (MEDIUM: 0, HIGH: 8, CRITICAL: 0)
+[2026-09-04T00:46:09.233Z] 
+[2026-09-04T00:46:09.233Z] ┌─────────┬────────────────┬──────────┬────────┬───────────────────┬──────────────────────────────┬──────────────────────────────────────────────────────────────┐
+[2026-09-04T00:46:09.233Z] │ Library │ Vulnerability  │ Severity │ Status │ Installed Version │        Fixed Version         │                            Title                             │
+[2026-09-04T00:46:09.233Z] ├─────────┼────────────────┼──────────┼────────┼───────────────────┼──────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │ stdlib  │ CVE-2026-33818 │ HIGH     │ fixed  │ v1.26.5           │ 1.25.13, 1.26.6, 1.27.0-rc.3 │ encoding/asn1: golang: Go encoding/asn1: Denial of Service   │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ via excessive recursion in Unmarshal...                      │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-33818                   │
+[2026-09-04T00:46:09.233Z] │         ├────────────────┤          │        │                   │                              ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │         │ CVE-2026-39821 │          │        │                   │                              │ golang.org/x/net/idna: golang: net/http:                     │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ golang.org/x/net/idna: Privilege escalation via incorrect    │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ Punycode label processing                                    │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-39821                   │
+[2026-09-04T00:46:09.233Z] │         ├────────────────┤          │        │                   ├──────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │         │ CVE-2026-46600 │          │        │                   │ 1.26.6, 1.27.0-rc.3          │ golang.org/x/net/dns/dnsmessage:                             │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ golang.org/x/net/dns/dnsmessage: Denial of Service via       │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ invalid DNS record parsing                                   │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-46600                   │
+[2026-09-04T00:46:09.233Z] │         ├────────────────┤          │        │                   ├──────────────────────────────┼──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │         │ CVE-2026-56853 │          │        │                   │ 1.25.13, 1.26.6, 1.27.0-rc.3 │ net/http: golang: Go net/http: Unencrypted HTTP/2            │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ connections vulnerable to Denial of Service...               │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-56853                   │
+[2026-09-04T00:46:09.233Z] │         ├────────────────┤          │        │                   │                              ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │         │ CVE-2026-56858 │          │        │                   │                              │ html/template: golang: Go html/template: Cross-Site          │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ Scripting via pathological input                             │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-56858                   │
+[2026-09-04T00:46:09.233Z] │         ├────────────────┤          │        │                   │                              ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │         │ CVE-2026-56859 │          │        │                   │                              │ encoding/xml: golang: Go: Denial of Service via XML decoding │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ recursion depth issue...                                     │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-56859                   │
+[2026-09-04T00:46:09.233Z] │         ├────────────────┤          │        │                   │                              ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │         │ CVE-2026-56860 │          │        │                   │                              │ net/url: golang: golang net/url: Denial of Service from      │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ quadratic complexity in path...                              │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-56860                   │
+[2026-09-04T00:46:09.233Z] │         ├────────────────┤          │        │                   │                              ├──────────────────────────────────────────────────────────────┤
+[2026-09-04T00:46:09.233Z] │         │ CVE-2026-56862 │          │        │                   │                              │ crypto/tls: golang: Golang crypto/tls: Denial of Service via │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ indefinite KeyUpdate messages                                │
+[2026-09-04T00:46:09.233Z] │         │                │          │        │                   │                              │ https://avd.aquasec.com/nvd/cve-2026-56862                   │
+[2026-09-04T00:46:09.233Z] └─────────┴────────────────┴──────────┴────────┴───────────────────┴──────────────────────────────┴──────────────────────────────────────────────────────────────┘
+[Pipeline] sh
+[2026-09-04T00:46:09.506Z] + echo --- Trivy gate: CRITICAL findings fail this build ---
+[2026-09-04T00:46:09.507Z] --- Trivy gate: CRITICAL findings fail this build ---
+[2026-09-04T00:46:09.507Z] + trivy image --scanners vuln --severity CRITICAL --ignore-unfixed --exit-code 1 --no-progress --skip-version-check kente-retail/order-service:3-d368d7b
+[2026-09-04T00:46:09.507Z] 2026-09-04T00:46:09Z	INFO	[vuln] Vulnerability scanning is enabled
+[2026-09-04T00:46:15.989Z] 2026-09-04T00:46:15Z	INFO	Detected OS	family="ubuntu" version="26.04"
+[2026-09-04T00:46:15.989Z] 2026-09-04T00:46:15Z	INFO	[ubuntu] Detecting vulnerabilities...	os_version="26.04" pkg_num=140
+[2026-09-04T00:46:15.989Z] 2026-09-04T00:46:15Z	INFO	Number of language-specific files	num=2
+[2026-09-04T00:46:15.989Z] 2026-09-04T00:46:15Z	INFO	[gobinary] Detecting vulnerabilities...
+[2026-09-04T00:46:15.989Z] 2026-09-04T00:46:15Z	INFO	[jar] Detecting vulnerabilities...
+[2026-09-04T00:46:15.989Z] 2026-09-04T00:46:15Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.74/guide/scanner/vulnerability#severity-selection for details.
+[2026-09-04T00:46:15.989Z] 
+[2026-09-04T00:46:15.989Z] Report Summary
+[2026-09-04T00:46:15.989Z] 
+[2026-09-04T00:46:15.989Z] ┌─────────────────────────────────────────────────────┬──────────┬─────────────────┐
+[2026-09-04T00:46:15.989Z] │                       Target                        │   Type   │ Vulnerabilities │
+[2026-09-04T00:46:15.989Z] ├─────────────────────────────────────────────────────┼──────────┼─────────────────┤
+[2026-09-04T00:46:15.989Z] │ kente-retail/order-service:3-d368d7b (ubuntu 26.04) │  ubuntu  │        0        │
+[2026-09-04T00:46:15.989Z] ├─────────────────────────────────────────────────────┼──────────┼─────────────────┤
+[2026-09-04T00:46:15.989Z] │ app/app.jar                                         │   jar    │        0        │
+[2026-09-04T00:46:15.989Z] ├─────────────────────────────────────────────────────┼──────────┼─────────────────┤
+[2026-09-04T00:46:15.989Z] │ usr/bin/pebble                                      │ gobinary │        0        │
+[2026-09-04T00:46:15.989Z] └─────────────────────────────────────────────────────┴──────────┴─────────────────┘
+[2026-09-04T00:46:15.989Z] Legend:
+[2026-09-04T00:46:15.989Z] - '-': Not scanned
+[2026-09-04T00:46:15.989Z] - '0': Clean (no security findings detected)
+[2026-09-04T00:46:15.989Z] 
+[Pipeline] }
+[2026-09-04T00:46:16.003Z] Lock released on resource [Resource: trivy-cache]
+[Pipeline] // lock
+[Pipeline] sh
+[2026-09-04T00:46:16.296Z] + ./scripts/check-no-hardcoded-secrets.sh
+[2026-09-04T00:46:16.296Z] hardcoded-secret check passed: no credential literals in Jenkinsfile deploy infra scripts
+Post stage
+[Pipeline] archiveArtifacts
+[2026-09-04T00:46:16.325Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Approve Release)
+[Pipeline] timeout
+[2026-09-04T00:46:16.400Z] Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] input
+[2026-09-04T00:46:16.502Z] Deploy kente-retail/order-service:3-d368d7b to 172.31.3.164? The idle colour will be smoke-tested before any traffic moves.
+[2026-09-04T00:46:16.502Z] Deploy or Abort
+[2026-09-04T00:57:42.671Z] Approved by admin
+[Pipeline] echo
+[2026-09-04T00:57:42.695Z] Release approved by: admin
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy (idle colour))
+[Pipeline] sshagent
+[2026-09-04T00:57:42.830Z] [ssh-agent] Using credentials deploy (SSH key for deploy@deploy-target. Replaces the hardcoded password in the seeded Jenkinsfile.)
+[2026-09-04T00:57:42.830Z] $ ssh-agent
+[2026-09-04T00:57:42.858Z] SSH_AUTH_SOCK=/tmp/ssh-IzRh6rzzXmsl/agent.7147
+[2026-09-04T00:57:42.858Z] SSH_AGENT_PID=7151
+[2026-09-04T00:57:42.858Z] Running ssh-add (command line suppressed)
+[2026-09-04T00:57:42.873Z] [ssh-agent] Started.
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
+[2026-09-04T00:57:43.177Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 sudo /usr/local/bin/bluegreen.sh current
+[Pipeline] sh
+[2026-09-04T00:57:43.994Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 sudo /usr/local/bin/bluegreen.sh idle
+[Pipeline] sh
+[2026-09-04T00:57:44.512Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 sudo /usr/local/bin/bluegreen.sh port green
+[Pipeline] echo
+[2026-09-04T00:57:44.782Z] live=blue  deploying to idle=green on port 8082
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] sh
+[2026-09-04T00:57:45.070Z] + set -eu
+[2026-09-04T00:57:45.070Z] + echo shipping kente-retail/order-service:3-d368d7b to 172.31.3.164
+[2026-09-04T00:57:45.070Z] shipping kente-retail/order-service:3-d368d7b to 172.31.3.164
+[2026-09-04T00:57:45.070Z] + docker save kente-retail/order-service:3-d368d7b
+[2026-09-04T00:57:45.070Z] + gzip -1
+[2026-09-04T00:57:45.070Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 gunzip | docker load
+[2026-09-04T00:57:59.833Z] Loaded image: kente-retail/order-service:3-d368d7b
+[2026-09-04T00:57:59.833Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 sudo /usr/local/bin/bluegreen.sh deploy green kente-retail/order-service:3-d368d7b
+[2026-09-04T00:57:59.833Z] bluegreen: replacing container order-service-green with kente-retail/order-service:3-d368d7b on port 8082
+[2026-09-04T00:58:03.063Z] bluegreen: healthy: http://127.0.0.1:8082/health (after 3 attempt(s))
+[2026-09-04T00:58:03.063Z] bluegreen: deployed kente-retail/order-service:3-d368d7b to green, not yet receiving traffic
+[2026-09-04T00:58:03.063Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 /usr/local/bin/smoke.sh http://127.0.0.1:8082
+[2026-09-04T00:58:03.613Z] smoke: http://127.0.0.1:8082
+[2026-09-04T00:58:03.613Z]   PASS  GET /health returns OK
+[2026-09-04T00:58:03.613Z]   PASS  GET /api/orders lists ORD-1001 and ORD-1002
+[2026-09-04T00:58:03.613Z]   PASS  POST /api/orders returns a non-fixture ID
+[2026-09-04T00:58:03.613Z] smoke: all checks passed against http://127.0.0.1:8082
+[Pipeline] }
+[2026-09-04T00:58:03.627Z] $ ssh-agent -k
+[2026-09-04T00:58:03.633Z] unset SSH_AUTH_SOCK;
+[2026-09-04T00:58:03.633Z] unset SSH_AGENT_PID;
+[2026-09-04T00:58:03.633Z] echo Agent pid 7151 killed;
+[2026-09-04T00:58:03.634Z] [ssh-agent] Stopped.
+[Pipeline] // sshagent
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Switch Traffic)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] sshagent
+[2026-09-04T00:58:03.855Z] [ssh-agent] Using credentials deploy (SSH key for deploy@deploy-target. Replaces the hardcoded password in the seeded Jenkinsfile.)
+[2026-09-04T00:58:03.856Z] $ ssh-agent
+[2026-09-04T00:58:03.865Z] SSH_AUTH_SOCK=/tmp/ssh-qA8dpFS6JMsH/agent.7249
+[2026-09-04T00:58:03.865Z] SSH_AGENT_PID=7253
+[2026-09-04T00:58:03.865Z] Running ssh-add (command line suppressed)
+[2026-09-04T00:58:03.882Z] [ssh-agent] Started.
+[Pipeline] {
+[Pipeline] sh
+[2026-09-04T00:58:04.173Z] + set -eu
+[2026-09-04T00:58:04.173Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 sudo /usr/local/bin/bluegreen.sh switch green
+[2026-09-04T00:58:04.424Z] bluegreen: healthy: http://127.0.0.1:8082/health (after 1 attempt(s))
+[2026-09-04T00:58:04.424Z] bluegreen: healthy: http://127.0.0.1/health (after 1 attempt(s))
+[2026-09-04T00:58:04.424Z] bluegreen: traffic switched: blue -> green (previous colour left running for rollback)
+[Pipeline] }
+[2026-09-04T00:58:04.436Z] $ ssh-agent -k
+[2026-09-04T00:58:04.442Z] unset SSH_AUTH_SOCK;
+[2026-09-04T00:58:04.442Z] unset SSH_AGENT_PID;
+[2026-09-04T00:58:04.442Z] echo Agent pid 7253 killed;
+[2026-09-04T00:58:04.443Z] [ssh-agent] Stopped.
+[Pipeline] // sshagent
+[Pipeline] sh
+[2026-09-04T00:58:04.742Z] + ./deploy/smoke.sh http://172.31.3.164
+[2026-09-04T00:58:04.742Z] smoke: http://172.31.3.164
+[2026-09-04T00:58:04.742Z]   PASS  GET /health returns OK
+[2026-09-04T00:58:04.742Z]   PASS  GET /api/orders lists ORD-1001 and ORD-1002
+[2026-09-04T00:58:04.742Z]   PASS  POST /api/orders returns a non-fixture ID
+[2026-09-04T00:58:04.742Z] smoke: all checks passed against http://172.31.3.164
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verify)
+[Pipeline] sshagent
+[2026-09-04T00:58:04.846Z] [ssh-agent] Using credentials deploy (SSH key for deploy@deploy-target. Replaces the hardcoded password in the seeded Jenkinsfile.)
+[2026-09-04T00:58:04.846Z] $ ssh-agent
+[2026-09-04T00:58:04.857Z] SSH_AUTH_SOCK=/tmp/ssh-83r2lMWGpluO/agent.7289
+[2026-09-04T00:58:04.857Z] SSH_AGENT_PID=7291
+[2026-09-04T00:58:04.857Z] Running ssh-add (command line suppressed)
+[2026-09-04T00:58:04.875Z] [ssh-agent] Started.
+[Pipeline] {
+[Pipeline] sh
+[2026-09-04T00:58:05.167Z] + ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10 deploy@172.31.3.164 sudo /usr/local/bin/bluegreen.sh status
+[2026-09-04T00:58:05.418Z] live colour   : green  (port 8082)
+[2026-09-04T00:58:05.418Z] idle colour   : blue  (port 8081)
+[2026-09-04T00:58:05.418Z] upstream conf : /etc/nginx/conf.d/upstream-order-service.conf
+[2026-09-04T00:58:05.418Z] 
+[2026-09-04T00:58:05.418Z] containers:
+[2026-09-04T00:58:05.418Z] order-service-green	kente-retail/order-service:3-d368d7b	Up 6 seconds	127.0.0.1:8082->8080/tcp
+[2026-09-04T00:58:05.418Z] order-service-blue	kente-retail/order-service:2-89ba7bc	Up 31 minutes	127.0.0.1:8081->8080/tcp
+[2026-09-04T00:58:05.418Z] 
+[2026-09-04T00:58:05.418Z]   blue  direct  http://127.0.0.1:8081/health -> 200
+[2026-09-04T00:58:05.418Z]   green direct  http://127.0.0.1:8082/health -> 200
+[2026-09-04T00:58:05.418Z]   nginx        http://127.0.0.1/health -> 200
+[Pipeline] }
+[2026-09-04T00:58:05.430Z] $ ssh-agent -k
+[2026-09-04T00:58:05.435Z] unset SSH_AUTH_SOCK;
+[2026-09-04T00:58:05.435Z] unset SSH_AGENT_PID;
+[2026-09-04T00:58:05.435Z] echo Agent pid 7291 killed;
+[2026-09-04T00:58:05.436Z] [ssh-agent] Stopped.
+[Pipeline] // sshagent
+[Pipeline] echo
+[2026-09-04T00:58:05.494Z] green is live with kente-retail/order-service:3-d368d7b. blue is still running and one reload away if this goes wrong.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] cleanWs
+[2026-09-04T00:58:05.590Z] [WS-CLEANUP] Deleting project workspace...
+[2026-09-04T00:58:05.590Z] [WS-CLEANUP] Deferred wipeout is used...
+[2026-09-04T00:58:05.600Z] [WS-CLEANUP] done
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
