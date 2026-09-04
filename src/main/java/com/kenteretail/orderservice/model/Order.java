@@ -23,4 +23,10 @@ public class Order {
     public int getQuantity() {
         return quantity;
     }
+
+    // Kente Retail prices in cedis. Constant for now -- multi-currency is a
+    // later ticket; this exists so a release is visible in the response body.
+    public String getCurrency() {
+        return "GHS";
+    }
 }
