@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OrderControllerTest {
@@ -60,5 +61,15 @@ class OrderControllerTest {
                 .collect(Collectors.toSet());
 
         assertEquals(50, seen.size(), "sequence handed out a duplicate order ID");
+    }
+
+    @Test
+    void getOrderFindsAFixture() {
+        assertEquals("kente-cloth-scarf", controller.getOrder("ORD-1002").getItem());
+    }
+
+    @Test
+    void getOrderRejectsAnUnknownId() {
+        assertThrows(OrderNotFoundException.class, () -> controller.getOrder("9123"));
     }
 }
