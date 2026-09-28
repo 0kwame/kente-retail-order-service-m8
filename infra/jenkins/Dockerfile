@@ -34,6 +34,14 @@ RUN curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY
         | tar -xz -C /usr/local/bin trivy \
     && trivy --version
 
+# gitleaks for the secret scan in the Security Scan stage. Pinned for the same
+# reason as Trivy: a scanner that changes under you can start failing, or
+# stop catching, for reasons unrelated to the code.
+ARG GITLEAKS_VERSION=8.30.1
+RUN curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+        | tar -xz -C /usr/local/bin gitleaks \
+    && gitleaks version
+
 USER jenkins
 
 # --chmod so the build does not inherit whatever mode the file happens to have

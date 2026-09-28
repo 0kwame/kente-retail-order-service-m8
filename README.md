@@ -85,8 +85,12 @@ If a build fails *after* traffic has moved, the pipeline rolls back on its own.
 | `sshpass -p '<literal>'` — the password was in the file, in git, and in every build log | `sshagent(credentials: ['kente-deploy-ssh'])`, declared in JCasC, referenced by id only |
 | `docker rm -f` then `docker run` — an outage on every release, nothing to go back to | Blue-green with an nginx switch, pre-switch smoke test, and automatic rollback |
 
-`scripts/check-no-hardcoded-secrets.sh` runs on every build so the second one
-stays closed.
+gitleaks runs on every build, over the full git history, so the second one
+stays closed (rules in `.gitleaks.toml`). The same rules run as a pre-commit
+hook: turn it on once per clone with `git config core.hooksPath .githooks`.
+In Module 8 the history scan found the seeded password still reachable in the
+first Jenkinsfile commit, so history was rewritten with `git filter-repo` and
+the value now reads `***REMOVED***`.
 
 ## Branches that are supposed to fail
 

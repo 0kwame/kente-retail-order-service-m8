@@ -62,11 +62,11 @@ green build.
 
 ## 1 · The problem, in the code (2 min)
 
-Open the seeded `Jenkinsfile` at commit `00a5ff4` — the state it was handed over
+Open the seeded `Jenkinsfile` at commit `8d4f88e` — the state it was handed over
 in — and show the three lines that matter:
 
 ```bash
-git show 00a5ff4:Jenkinsfile | grep -n "exit-code 0\|sshpass\|docker rm -f"
+git show 8d4f88e:Jenkinsfile | grep -n "exit-code 0\|sshpass\|docker rm -f"
 ```
 
 Say: *three separate ways to have a bad night. A scan that reports and blocks
@@ -76,19 +76,21 @@ before starting the new one.*
 Then prove the last one is not rhetorical:
 
 ```bash
-git show 00a5ff4:Jenkinsfile | sed -n '/stage(.Deploy.)/,/^        }/p'
+git show 8d4f88e:Jenkinsfile | sed -n '/stage(.Deploy.)/,/^        }/p'
 ```
 
 ## 2 · Credentials (2 min)
 
 ```bash
-./scripts/check-no-hardcoded-secrets.sh
-git stash list >/dev/null; git show 00a5ff4:Jenkinsfile > /tmp/seeded-Jenkinsfile
-./scripts/check-no-hardcoded-secrets.sh /tmp/seeded-Jenkinsfile   # fails, as it must
+gitleaks git . --config .gitleaks.toml --redact    # full history: no leaks
+printf "sh 'sshpass -p %s ssh deploy@x'\n" "$(openssl rand -hex 6)" > /tmp/seeded-Jenkinsfile
+gitleaks dir /tmp/seeded-Jenkinsfile --config .gitleaks.toml   # fails, as it must
 ```
 
-Say: *the check passes on today's tree and fails on the version we were handed. A
-check that has never been run against a failing input is not a check.*
+Say: *the check passes on the whole history and fails on the pattern we were
+handed. A check that has never been run against a failing input is not a check.*
+The seeded value itself is gone from history: Module 8's history scan found it,
+and `git filter-repo` replaced it with `***REMOVED***`.
 
 Then, in Jenkins: **Manage Jenkins → Credentials** — two credentials, both declared
 in `infra/jenkins/jenkins.yaml`, neither typed into a UI.
@@ -152,7 +154,7 @@ Point out that the pipeline never reached the deploy stages — `when { branch
 one. Show it:
 
 ```bash
-cd .. && git -C order-service log --oneline 00a5ff4   # three commits, that is all
+cd .. && git -C order-service log --oneline 8d4f88e   # three commits, that is all
 ```
 
 Then explain the reconstruction from the seeded fingerprint — the sequence comment
@@ -175,8 +177,8 @@ org.apache.logging.log4j:log4j-core 2.14.1  CVE-2021-44228  fix 2.15.0
 Then the better story:
 
 ```bash
-git show e33baf0 --stat
-git log -1 e33baf0 --format=%B
+git show f3e4ed5 --stat
+git log -1 f3e4ed5 --format=%B
 ```
 
 Say: *this gate failed on `main` the first time it ran — four CRITICAL CVEs in the

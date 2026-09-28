@@ -75,3 +75,10 @@ you were escaping. Recorded rather than quietly fixed.
 separately with `scripts/availability-probe.sh`: 230 samples at 300 ms across a
 full release, 0 non-200, measured from a laptop over the public internet to
 `us-east-1`. Figures in `docs/verified-evidence.md`.
+
+**These logs quote pre-rewrite SHAs.** On 2026-09-28 the Module 8 history scan
+found the seeded Module 7 password still reachable in the first `Jenkinsfile`
+commit, and `git filter-repo` rewrote history to replace it. Every commit from
+that one onward got a new SHA. The logs and Trivy output here were captured
+before that and are left exactly as recorded. `sha-map-2026-09-28.txt` maps
+each old SHA to its new one.

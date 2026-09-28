@@ -145,8 +145,11 @@ pipeline {
                 }
 
                 // The other half of "no secrets in the pipeline": prove none came
-                // back. See scripts/check-no-hardcoded-secrets.sh.
-                sh './scripts/check-no-hardcoded-secrets.sh'
+                // back, anywhere in the git history -- not only in today's
+                // tree. A secret removed in a later commit is still leaked
+                // while an old commit holds it. Rules: .gitleaks.toml.
+                // --redact keeps a found value out of the build log.
+                sh 'gitleaks git . --config .gitleaks.toml --redact --no-banner --exit-code 1'
             }
             post {
                 always {

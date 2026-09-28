@@ -1,0 +1,39 @@
+# Commit SHAs before and after the 2026-09-28 history rewrite (git filter-repo).
+# The rewrite replaced the seeded Module 7 sshpass password with ***REMOVED***.
+# Build logs and Trivy output in this folder were captured before it, so they
+# quote the OLD SHAs. Look them up here.
+# old     new
+00a5ff4 8d4f88e
+0618814 b141904
+06ea996 ab25344
+08d25f5 2c513ea
+10fc742 b93a420
+1c1e516 e352736
+21f6c18 40910f8
+452eb80 3d7d408
+47e7874 3678530
+4dbba5b 6b5e8cd
+54d2ef5 4b7dd70
+55e0eac 9cc5f9c
+618efd9 d8e78fd
+65677fd 7b14876
+6880fe5 dd4d923
+69bf953 3f27bcb
+6adaf65 11b8460
+8417691 d8ad41b
+8541546 e72923d
+89ba7bc b8b72f8
+8bd6cb2 ee2e8bc
+921f922 46b0a16
+bc034fa f1f2699
+bed6bba 9fe4cc4
+bff383d bc0e12f
+c2fbd2e 9407574
+c54c0d5 b3468cc
+c94d23e c47ca8c
+d368d7b 1fa3b39
+db35956 e45c4cb
+e33baf0 f3e4ed5
+e5089ee e0f0d84
+ff3a61f 6975fe1
+ffed2d0 b280629

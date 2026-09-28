@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# Blocks a commit that adds a secret. Scans only the staged changes, so it runs
+# in well under a second.
+#
+# Turn it on once per clone:
+#   git config core.hooksPath .githooks
+#
+# This is the early catch, not the gate: `git commit --no-verify` skips it, and
+# a clone without the config line never runs it. The Jenkins Security Scan
+# stage runs the same rules over the full history on every build.
+
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+    echo "pre-commit: gitleaks is not installed, so this commit was not scanned for secrets." >&2
+    echo "pre-commit: install it (https://github.com/gitleaks/gitleaks/releases) and commit again." >&2
+    exit 1
+fi
+
+exec gitleaks git --pre-commit --staged --config .gitleaks.toml --redact --no-banner

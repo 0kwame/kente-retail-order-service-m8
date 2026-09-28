@@ -1,0 +1,49 @@
+# gitleaks configuration for order-service.
+#
+# Runs in two places: the pre-commit hook (.githooks/pre-commit, staged changes)
+# and the Jenkins Security Scan stage (full git history).
+#
+# The default rules stay on. The two custom rules exist because the defaults
+# found NOTHING in this repo's two real leaks: a plaintext db.password in a
+# properties file (the Module 8 near-miss) and an sshpass -p password in the
+# seeded Module 7 Jenkinsfile. The default generic rule only flags
+# random-looking strings, and human-chosen passwords are not random.
+#
+# Test a rule change against a known-bad line before committing it. The value
+# is built at runtime so this file never holds a literal the rules would flag:
+#   printf 'db.password=%s\n' "$(openssl rand -hex 6)" > /tmp/x.properties
+#   gitleaks dir /tmp/x.properties -c .gitleaks.toml    # must report 1 leak
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "kente-password-assignment"
+description = "Password-like key assigned a literal value (properties, env, YAML, HCL)"
+regex = '''(?i)[\w.-]*(?:password|passwd|pwd|secret|token)[\w.-]*["']?\s*[=:]\s*["']?([^\s"'$<{][^\s"']{5,})'''
+secretGroup = 1
+keywords = ["password", "passwd", "pwd", "secret", "token"]
+
+  # References and paths, not values: Terraform references (var.x,
+  # aws_secretsmanager_secret.y.name), shell defaults (${X:-/path}), docker
+  # volume paths, IAM action names (secretsmanager:GetSecretValue), and grep
+  # output such as secret-before.txt:14: (a file name, then a line number).
+  [[rules.allowlists]]
+  regexTarget = "secret"
+  regexes = ['''^(?:var|local|data|module)\.''', '''^aws_\w+\.''', '''^[-/]''', '''^\d+:''']
+  [[rules.allowlists]]
+  regexTarget = "match"
+  regexes = ['''secretsmanager:\w+''']
+
+[[rules]]
+id = "kente-sshpass"
+description = "Password typed on an sshpass command line"
+regex = '''sshpass\s+-p\s*['"]?([^\s'"]+)'''
+secretGroup = 1
+keywords = ["sshpass"]
+
+  # Docs that describe the pattern with a <placeholder>, and the marker that
+  # git filter-repo left where the seeded Module 7 password used to be.
+  [[rules.allowlists]]
+  regexTarget = "secret"
+  regexes = ['''^<''', '''^\*+REMOVED\*+$''']

@@ -14,8 +14,8 @@ Spring Boot `3.2.5` with Tomcat overridden to `10.1.59`.
 | # | Criterion | Run | Result |
 |---|---|---|---|
 | 1 | Jenkins installed and running, learner-owned | `scripts/bootstrap-jenkins.sh` | Controller built from `infra/jenkins/`, 234 plugins, JCasC created the job and both credentials with no UI interaction |
-| 2 | Multi-stage pipeline builds, tests, containerizes, deploys via SSH | `main` #5 and #6 | All 10 stages SUCCESS. Image `6-e5089ee` deployed to the target over SSH |
-| 3 | Jenkins credentials for every secret, none hardcoded | every build | `check-no-hardcoded-secrets.sh` passes in-pipeline; fails on the seeded `Jenkinsfile` when pointed at it |
+| 2 | Multi-stage pipeline builds, tests, containerizes, deploys via SSH | `main` #5 and #6 | All 10 stages SUCCESS. Image `6-e0f0d84` deployed to the target over SSH |
+| 3 | Jenkins credentials for every secret, none hardcoded | every build | `check-no-hardcoded-secrets.sh` passes in-pipeline; fails on the seeded `Jenkinsfile` when pointed at it. Replaced in Module 8 by gitleaks over the full history (`.gitleaks.toml`) |
 | 4 | Security scan fails the build on critical findings | `broken/vulnerable-dependency` #3 | **FAILED at Security Scan.** `CVE-2021-44228` (Log4Shell RCE) CRITICAL in `log4j-core 2.14.1`. Test and Containerize passed first, so the scan is what stopped it |
 | 5 | The broken commit is blocked | `broken/order-id-collision` #3 | **FAILED at Test.** `generated order ID collided with a seed fixture: ORD-1001`. Never reached the deploy stages |
 | 6 | Blue-green with a demonstrated rollback | `main` #6, then `bluegreen.sh rollback` | Switch blue→green in **969 ms**; rollback green→blue with **0 dropped requests** |
@@ -72,7 +72,7 @@ four CRITICAL CVEs in the Tomcat bundled with Spring Boot 3.2.5:
 | CVE-2026-43512 | `tomcat-embed-core` | 10.1.20 | 10.1.55 |
 | CVE-2026-43515 | `tomcat-embed-core` | 10.1.20 | 10.1.55 |
 
-Fixed in `e33baf0` by overriding `tomcat.version` to 10.1.59. Gate now reports
+Fixed in `f3e4ed5` by overriding `tomcat.version` to 10.1.59. Gate now reports
 zero CRITICAL findings on `main`. Reasoning for the override rather than a
 framework bump: `docs/assumptions-log.md §5`.
 
@@ -82,8 +82,8 @@ framework bump: `docs/assumptions-log.md §5`.
 live colour   : green  (port 8082)
 idle colour   : blue   (port 8081)
 
-order-service-blue    kente-retail/order-service:6-e5089ee   Up   127.0.0.1:8081->8080
-order-service-green   kente-retail/order-service:5-db35956   Up   127.0.0.1:8082->8080
+order-service-blue    kente-retail/order-service:6-e0f0d84   Up   127.0.0.1:8081->8080
+order-service-green   kente-retail/order-service:5-e45c4cb   Up   127.0.0.1:8082->8080
 
   blue  direct  -> 200
   green direct  -> 200
@@ -119,10 +119,10 @@ in the git history with their fixes:
 | Defect | How it would have failed | Commit |
 |---|---|---|
 | `.gitignore` `target/` swallowed `infra/target/bootstrap.sh` | Deploy target boots, cannot find its own bootstrap script | renamed to `infra/target-host/` |
-| Trivy pinned to `0.63.0`, not a real release | Jenkins image build 404s | `bff383d` |
-| `umask 077` leaked into `git clone` | Jenkins builds green with zero plugins, JCasC silently never runs | `08d25f5` |
-| Trivy cache shared across concurrent branch builds | Lock timeout on one branch, SIGSEGV in bbolt on another | `65677fd` |
-| `core.fileMode = false` hid every `chmod +x` | `Permission denied` calling pipeline scripts from a fresh checkout | `db35956` |
+| Trivy pinned to `0.63.0`, not a real release | Jenkins image build 404s | `bc0e12f` |
+| `umask 077` leaked into `git clone` | Jenkins builds green with zero plugins, JCasC silently never runs | `2c513ea` |
+| Trivy cache shared across concurrent branch builds | Lock timeout on one branch, SIGSEGV in bbolt on another | `7b14876` |
+| `core.fileMode = false` hid every `chmod +x` | `Permission denied` calling pipeline scripts from a fresh checkout | `e45c4cb` |
 | `types_hash_max_size 2048` did not silence the nginx warning | A warning on every single traffic switch | corrected after testing on the host |
 
 The last one is worth its own note: the first fix for it was committed with a

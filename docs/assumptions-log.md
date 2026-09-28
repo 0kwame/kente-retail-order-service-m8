@@ -72,7 +72,7 @@ clean commits and the working tree matches `HEAD` exactly:
 ```
 20d8450  Initial scaffold: Maven project for order-service
 a622365  Add order-service REST API with /health and /api/orders, plus unit tests
-00a5ff4  Add Dockerfile and a partially-working Jenkinsfile   <- HEAD
+8d4f88e  Add Dockerfile and a partially-working Jenkinsfile   <- HEAD
 ```
 
 I verified this by decompressing every object in `.git/objects` — there is no
@@ -137,7 +137,7 @@ to an upstream maintainer.
 
 **Evidence this is not a loophole.** On its first real run, the gate failed `main`
 on four fixed CRITICAL CVEs in Tomcat 10.1.20, which arrived with Spring Boot
-3.2.5 and had been in the image since the module started. See commit `e33baf0`.
+3.2.5 and had been in the image since the module started. See commit `f3e4ed5`.
 The gate found a real vulnerability in real code on day one.
 
 **Related decision.** I fixed those by overriding `tomcat.version` to 10.1.59
