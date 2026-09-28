@@ -39,7 +39,7 @@ variable "repo_url" {
     clone stops being the simple thing it is today.
   DESC
   type        = string
-  default     = "https://github.com/0kwame/kente-retail-order-service.git"
+  default     = "https://github.com/0kwame/kente-retail-order-service-m8.git"
 }
 
 variable "repo_branch" {
