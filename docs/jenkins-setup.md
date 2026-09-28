@@ -111,8 +111,9 @@ git push
 ```
 
 `jenkins_home` is a named Docker volume, so job history and build logs survive
-the rebuild. That matters here: the failed builds on the `broken/*` branches are
-deliverable evidence.
+the rebuild. That mattered in Module 7, where the failed builds on the `broken/*`
+branches were deliverable evidence (those branches now live in the Module 7 repo
+only).
 
 For the deploy target, the equivalent is:
 

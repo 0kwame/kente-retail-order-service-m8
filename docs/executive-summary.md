@@ -106,8 +106,8 @@ screenshot:
 
 | Claim | How to check it |
 |---|---|
-| Bad commits are blocked | Build the `broken/order-id-collision` branch — fails at Test |
-| Vulnerabilities block a release | Build `broken/vulnerable-dependency` — fails at Security Scan on Log4j |
+| Bad commits are blocked | Build the `broken/order-id-collision` branch in the Module 7 repo — fails at Test |
+| Vulnerabilities block a release | Build `broken/vulnerable-dependency` in the Module 7 repo — fails at Security Scan on Log4j |
 | No hardcoded credentials | `gitleaks git . --config .gitleaks.toml`, which also runs on every build over the full history |
 | Zero-downtime switch | Poll `/health` in a loop through the load balancer during a release |
 | Rollback works | `bluegreen.sh status`, `bluegreen.sh rollback`, `status` again |

@@ -131,7 +131,11 @@ Talk through the stages as they go:
 
 ## 4 · The broken commit is blocked (3 min)
 
+This section and the next run against the Module 7 repo, which keeps the two
+`broken/*` branches. The Module 8 repo builds `main` only.
+
 ```bash
+git clone https://github.com/0kwame/kente-retail-order-service m7 && cd m7
 git log --oneline -1 broken/order-id-collision
 git show broken/order-id-collision --stat
 ```
@@ -259,8 +263,9 @@ Then offer the honest limits before being asked — it lands much better volunte
 Build history lives on the Jenkins volume and dies with the instance.
 
 ```bash
-# Console logs for the two branches that must fail, plus the green run
-for job in main broken%2Forder-id-collision broken%2Fvulnerable-dependency; do
+# Console log for the green run on main (the Module 7 broken/* logs are
+# already in docs/evidence/)
+for job in main; do
   out="evidence-$(echo "$job" | tr '/%' '__').txt"
   curl -su "admin:$JENKINS_ADMIN_PASSWORD" \
     "$JENKINS/job/order-service/job/$job/lastBuild/consoleText" -o "$out"

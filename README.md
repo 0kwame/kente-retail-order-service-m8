@@ -94,12 +94,12 @@ the value now reads `***REMOVED***`.
 
 ## Branches that are supposed to fail
 
-Evidence for two acceptance criteria, as real red builds rather than screenshots:
-
-| Branch | Fails at | Why |
-|---|---|---|
-| `broken/order-id-collision` | `Test` | Sequence starts inside the fixture range, so a generated ID collides with `ORD-1001` |
-| `broken/vulnerable-dependency` | `Security Scan` | Ships a Log4j version with a fixed `CRITICAL` CVE |
+Module 7 proved its gates with two branches that must go red:
+`broken/order-id-collision` (fails at `Test`) and `broken/vulnerable-dependency`
+(fails at `Security Scan` on Log4j). They live in the Module 7 repo,
+[0kwame/kente-retail-order-service](https://github.com/0kwame/kente-retail-order-service), with the build logs in
+`docs/evidence/`. This Module 8 repo builds `main` only, so no branch runs an
+older pipeline than the one described here.
 
 ## Running the service locally
 

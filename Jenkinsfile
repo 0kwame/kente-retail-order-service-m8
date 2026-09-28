@@ -160,8 +160,7 @@ pipeline {
 
         stage('Deploy (idle colour)') {
             // Feature branches build, test and scan but never touch the deploy
-            // target. The two broken/* branches are supposed to die above this
-            // line, which is the whole point of them.
+            // target. A bad change is supposed to die above this line.
             when { branch 'main' }
             steps {
                 sshagent(credentials: ['kente-deploy-ssh']) {

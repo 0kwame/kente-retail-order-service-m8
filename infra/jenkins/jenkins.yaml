@@ -68,15 +68,15 @@ jobs:
   - script: |
       multibranchPipelineJob('order-service') {
           displayName('order-service (Kente Retail)')
-          description('''Multibranch so the deliberately-broken branches are one click each:
-                         main                         -> full green run, deploy + switch
-                         broken/order-id-collision    -> must fail at Test
-                         broken/vulnerable-dependency -> must fail at Security Scan''')
+          // Multibranch, so a feature branch builds, tests and scans without
+          // deploying. The Module 7 broken/* demo branches live in the Module 7
+          // repo only; this repo builds main.
+          description('main -> full green run: build, test, scan, deploy, switch')
           branchSources {
               git {
                   id('order-service')
                   remote(System.getenv('REPO_URL'))
-                  includes('main broken/*')
+                  includes('main')
               }
           }
           orphanedItemStrategy {
