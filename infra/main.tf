@@ -160,6 +160,7 @@ resource "aws_instance" "target" {
   subnet_id                   = data.aws_subnets.default.ids[0]
   key_name                    = aws_key_pair.lab.key_name
   vpc_security_group_ids      = [aws_security_group.target.id]
+  iam_instance_profile        = aws_iam_instance_profile.target.name
   associate_public_ip_address = true
 
   root_block_device {
@@ -169,9 +170,12 @@ resource "aws_instance" "target" {
   }
 
   user_data = templatefile("${path.module}/user_data_target.sh", {
-    repo_url    = var.repo_url
-    repo_branch = var.repo_branch
+    repo_url     = var.repo_url
+    repo_branch  = var.repo_branch
+    region       = var.region
+    db_secret_id = aws_secretsmanager_secret.db_password.name
   })
+
 
   tags = { Name = "${var.name_prefix}-target", Role = "deploy-target" }
 }

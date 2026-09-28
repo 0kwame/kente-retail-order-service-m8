@@ -25,6 +25,11 @@ HEALTH_PATH=/health
 HEALTH_RETRIES=30
 HEALTH_INTERVAL=2
 
+# AWS_REGION and DB_SECRET_ID, written by infra/user_data_target.sh.
+TARGET_ENV=/etc/kente-target.env
+# shellcheck disable=SC1090
+[[ -f "$TARGET_ENV" ]] && source "$TARGET_ENV"
+
 die() { echo "bluegreen: $*" >&2; exit 1; }
 log() { echo "bluegreen: $*"; }
 
@@ -119,6 +124,17 @@ cmd_status() {
         "nginx" "$HEALTH_PATH" "$(http_code "http://127.0.0.1${HEALTH_PATH}")"
 }
 
+# The DB password comes from Secrets Manager through the instance role, at
+# deploy time. It is never in the image, the repo or a file on this host.
+db_password() {
+    [[ -n "${DB_SECRET_ID:-}" ]] || die "DB_SECRET_ID not set -- is $TARGET_ENV missing?"
+    aws secretsmanager get-secret-value \
+        --region "${AWS_REGION:?AWS_REGION not set in $TARGET_ENV}" \
+        --secret-id "$DB_SECRET_ID" \
+        --query SecretString --output text \
+        || die "cannot read $DB_SECRET_ID -- check the secret has a value and the instance role"
+}
+
 # Start an image on one colour's port. Does not touch traffic.
 cmd_deploy() {
     local colour=${1:-} image=${2:-} port name
@@ -132,14 +148,22 @@ cmd_deploy() {
         die "refusing to deploy onto the live colour ($colour) -- that is the not-blue-green path the brief rules out"
     fi
 
+    # Read before the old container is removed, so a missing secret leaves the
+    # idle colour as it was.
+    local secret
+    secret=$(db_password)
+
     log "replacing container $name with $image on port $port"
     docker rm -f "$name" >/dev/null 2>&1 || true
-    docker run -d \
+    # -e NAME with no value copies it from this command's environment, so the
+    # password is not on the docker command line or in `ps`.
+    DB_PASSWORD="$secret" docker run -d \
         --name "$name" \
         --restart unless-stopped \
         -p "127.0.0.1:${port}:8080" \
         --label "kente.colour=${colour}" \
         --label "kente.image=${image}" \
+        -e DB_PASSWORD \
         "$image" >/dev/null
 
     wait_healthy "http://127.0.0.1:${port}${HEALTH_PATH}"
