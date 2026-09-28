@@ -103,3 +103,28 @@ Evidence for two acceptance criteria, as real red builds rather than screenshots
 mvn spring-boot:run
 ./deploy/smoke.sh http://127.0.0.1:8080
 ```
+
+Endpoints:
+
+- `GET /health`: liveness check
+- `GET /api/orders`: list orders (stubbed, in-memory)
+- `GET /api/orders/{id}`: look up one order (404 if it does not exist)
+- `POST /api/orders`: create an order
+- `GET /actuator/health`, `GET /actuator/prometheus`: for the Prometheus scrape
+
+## Module 8: monitoring, logging and security
+
+This repo is the base for the Module 8 lab ("Sleep at Night"). The Module 8
+starter's additions are ported in as they were handed over: actuator and
+Prometheus metrics, `src/main/resources/application.properties`, the single-order
+lookup, and `infra/deploy-role-policy.json` (the IAM policy for the service's
+deploy role). They have not been reviewed yet.
+
+What gets built on top:
+
+- Centralised logging for this service (ELK or CloudWatch Logs), with a real
+  query against a supplied log pattern.
+- A Prometheus/Grafana dashboard with at least one alert rule that fires under
+  load (`load-test.sh` in the lab bundle).
+- A security review of this repo against the Kente Retail security and
+  observability baseline policy. Do not assume anything here already meets it.
