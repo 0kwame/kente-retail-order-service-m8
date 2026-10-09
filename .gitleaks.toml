@@ -25,12 +25,13 @@ secretGroup = 1
 keywords = ["password", "passwd", "pwd", "secret", "token"]
 
   # References and paths, not values: Terraform references (var.x,
-  # aws_secretsmanager_secret.y.name), shell defaults (${X:-/path}), docker
+  # aws_secretsmanager_secret.y.name), shell defaults (${X:-/path}) and required
+  # variables (${SECRET_ID:?message}), docker
   # volume paths, IAM action names (secretsmanager:GetSecretValue), and grep
   # output such as secret-before.txt:14: (a file name, then a line number).
   [[rules.allowlists]]
   regexTarget = "secret"
-  regexes = ['''^(?:var|local|data|module)\.''', '''^aws_\w+\.''', '''^[-/]''', '''^\d+:''']
+  regexes = ['''^(?:var|local|data|module)\.''', '''^aws_\w+\.''', '''^[-/?]''', '''^\d+:''']
   [[rules.allowlists]]
   regexTarget = "match"
   regexes = ['''secretsmanager:\w+''']
