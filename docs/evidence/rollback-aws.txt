@@ -1,0 +1,46 @@
+# Rollback in AWS, 2026-10-09: blue (build 2) live -> green (build 1).
+# /health was polled from outside through nginx (port 80) during it.
+
+live colour   : blue  (port 8081)
+idle colour   : green  (port 8082)
+bluegreen: rolling back: blue -> green
+bluegreen: healthy: http://127.0.0.1:8082/health (after 1 attempt(s))
+bluegreen: healthy: http://127.0.0.1/health (after 1 attempt(s))
+bluegreen: traffic switched: blue -> green (previous colour left running for rollback)
+bluegreen: rollback complete, green is live
+live colour   : green  (port 8082)
+idle colour   : blue  (port 8081)
+[{"id":"ORD-1001","item":"kente-cloth-wrap","quantity":2,"currency":"GHS"},{"id":"ORD-1002","item":"kente-cloth-scarf","
+# /health poll (UTC time, status code): 32 polls, all 200
+21:25:24 200
+21:25:25 200
+21:25:26 200
+21:25:26 200
+21:25:27 200
+21:25:28 200
+21:25:29 200
+21:25:30 200
+21:25:30 200
+21:25:31 200
+21:25:32 200
+21:25:33 200
+21:25:33 200
+21:25:34 200
+21:25:35 200
+21:25:36 200
+21:25:36 200
+21:25:37 200
+21:25:38 200
+21:25:39 200
+21:25:39 200
+21:25:40 200
+21:25:41 200
+21:25:42 200
+21:25:42 200
+21:25:43 200
+21:25:44 200
+21:25:45 200
+21:25:46 200
+21:25:47 200
+21:25:47 200
+21:25:48 200
