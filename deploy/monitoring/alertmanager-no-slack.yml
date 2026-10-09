@@ -1,0 +1,6 @@
+# Used when the Slack secret holds "none". Alerts still fire and show in the
+# Prometheus and Alertmanager UIs on loopback, but nothing is sent.
+route:
+  receiver: none
+receivers:
+  - name: none

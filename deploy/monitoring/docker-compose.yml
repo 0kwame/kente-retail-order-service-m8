@@ -1,0 +1,60 @@
+# Prometheus, Alertmanager and Grafana on the deploy target. Started by
+# start.sh, which first writes the secrets these containers read.
+#
+# Host networking, because the app colours listen on 127.0.0.1:8081 and :8082
+# only. Prometheus and Alertmanager bind to loopback. Grafana binds to all
+# interfaces, and the security group lets only admin_cidr reach port 3000.
+#
+# Images are pinned by tag and digest, like the app image. mem_limit keeps a
+# runaway tool from starving the app containers on the same host.
+services:
+  prometheus:
+    image: prom/prometheus:v3.15.0@sha256:efd719c99d83b060d9daefdcf00360461adf279f45ef5391f8d111892118753e
+    network_mode: host
+    restart: unless-stopped
+    mem_limit: 512m
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.listen-address=127.0.0.1:9090
+      - --storage.tsdb.retention.time=7d
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+
+  alertmanager:
+    image: prom/alertmanager:v0.34.1@sha256:e9733bafb1bdef9b00e25a21f8f99dc26a22224bf16641ad754d1649f4c3357a
+    network_mode: host
+    restart: unless-stopped
+    mem_limit: 128m
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --web.listen-address=127.0.0.1:9093
+    volumes:
+      # start.sh picks alertmanager.yml or alertmanager-no-slack.yml and writes
+      # the webhook file. Neither the URL nor the choice is in git.
+      - ${KENTE_STATE_DIR:-/etc/kente-monitoring}/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ${KENTE_STATE_DIR:-/etc/kente-monitoring}/slack_webhook:/etc/alertmanager/slack_webhook:ro
+      - alertmanager-data:/alertmanager
+
+  grafana:
+    image: grafana/grafana-oss:13.0.2@sha256:5dad0df181cb644a14e13617b913b261a54f7d4fd4510721dba420929f35bea2
+    network_mode: host
+    restart: unless-stopped
+    mem_limit: 384m
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      # From the env file start.sh writes from Secrets Manager.
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?run start.sh, not docker compose directly}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  prometheus-data:
+  alertmanager-data:
+  grafana-data:

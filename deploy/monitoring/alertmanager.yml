@@ -1,0 +1,16 @@
+# Used when a Slack webhook exists. start.sh writes the webhook to a file, so
+# the URL is never in git, the image or the container environment.
+route:
+  receiver: slack
+  group_by: [alertname]
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 1h
+
+receivers:
+  - name: slack
+    slack_configs:
+      - api_url_file: /etc/alertmanager/slack_webhook
+        send_resolved: true
+        title: '{{ if eq .Status "firing" }}FIRING{{ else }}RESOLVED{{ end }}: {{ .CommonLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.summary }}. {{ .Annotations.description }}{{ "\n" }}{{ end }}'

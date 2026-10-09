@@ -1,0 +1,18 @@
+Alert OrderServiceHighErrorRatio under load-test.sh, run LOCALLY on 2026-10-09
+(app container on 127.0.0.1:8081, Prometheus, Alertmanager and Grafana from
+deploy/monitoring/docker-compose.yml). Not yet run on the target host.
+
+Command: ../load-test.sh http://localhost:8081 150 10   (~22,900 request cycles)
+Rule:    error ratio (4xx and 5xx) above 5% for 1 minute
+
+Seconds after the load started, state from Prometheus /api/v1/alerts:
+   0 to  30   no alerts
+  40 to  80   pending
+  90 to 180   firing   (the 1m rate window keeps it firing after the load ends at 150)
+Error ratio at the end of the run: 0.0998 (9.98%)
+
+Alertmanager /api/v2/alerts: OrderServiceHighErrorRatio, state active.
+75 seconds after the load stopped: no alerts (resolved).
+
+Slack delivery was not part of this run: the no-Slack receiver was used.
+Grafana: dashboard "Order service" loaded with 6 panels, datasource health OK.
