@@ -7,6 +7,16 @@ output "slack_webhook_secret_id" {
   value = aws_secretsmanager_secret.slack_webhook.name
 }
 
+output "grafana_secret_id" {
+  description = "Grafana admin password. Read it with: aws secretsmanager get-secret-value --secret-id <this>"
+  value       = aws_secretsmanager_secret.grafana_admin_password.name
+}
+
+output "grafana_url" {
+  description = "Grafana. Reachable only from admin_cidr. User: admin."
+  value       = "http://${aws_instance.target.public_ip}:3000"
+}
+
 output "jenkins_url" {
   description = "Jenkins UI. Reachable only from admin_cidr."
   value       = "http://${aws_instance.jenkins.public_ip}:8080"

@@ -144,6 +144,14 @@ resource "aws_security_group" "target" {
     cidr_blocks = [var.admin_cidr]
   }
 
+  ingress {
+    description = "Grafana, admin only. Prometheus and Alertmanager stay on loopback."
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = [var.admin_cidr]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -156,7 +164,7 @@ resource "aws_security_group" "target" {
 
 resource "aws_instance" "target" {
   ami                         = data.aws_ami.al2023.id
-  instance_type               = var.instance_type
+  instance_type               = var.target_instance_type
   subnet_id                   = data.aws_subnets.default.ids[0]
   key_name                    = aws_key_pair.lab.key_name
   vpc_security_group_ids      = [aws_security_group.target.id]
@@ -174,6 +182,9 @@ resource "aws_instance" "target" {
     repo_branch  = var.repo_branch
     region       = var.region
     db_secret_id = aws_secretsmanager_secret.db_password.name
+    # Names only. start.sh reads the values with the instance role.
+    slack_secret_id   = aws_secretsmanager_secret.slack_webhook.name
+    grafana_secret_id = aws_secretsmanager_secret.grafana_admin_password.name
   })
 
 

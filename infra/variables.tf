@@ -16,6 +16,12 @@ variable "instance_type" {
   default     = "t3.small"
 }
 
+variable "target_instance_type" {
+  description = "Deploy target. Runs two app colours plus Prometheus, Alertmanager and Grafana, so it needs more memory than the 2 GB of a t3.small."
+  type        = string
+  default     = "t3.medium"
+}
+
 variable "admin_cidr" {
   description = <<-DESC
     The only CIDR allowed to reach SSH and the Jenkins UI. Pass your own address:

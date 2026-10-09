@@ -13,6 +13,8 @@ systemctl enable --now docker
 cat > /etc/kente-target.env <<'KENTE_ENV_EOF'
 AWS_REGION=${region}
 DB_SECRET_ID=${db_secret_id}
+SLACK_SECRET_ID=${slack_secret_id}
+GRAFANA_SECRET_ID=${grafana_secret_id}
 KENTE_ENV_EOF
 chmod 644 /etc/kente-target.env
 

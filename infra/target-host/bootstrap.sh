@@ -57,6 +57,23 @@ else
     log "upstream already exists, live colour left as: $(sed -n 's/^# live: //p' "$UPSTREAM_CONF" | head -1)"
 fi
 
+# --- monitoring: Compose plugin, then Prometheus, Alertmanager, Grafana ------
+# Amazon Linux does not package the Compose plugin. The binary is pinned and
+# checked against its published sha256, so a changed download fails the boot.
+COMPOSE_VERSION=v5.6.0
+COMPOSE_SHA256=40343e21ca777173e69cff5dbafeb37c6f81f3b0d57d9e597f036e95eb63e76a
+COMPOSE_BIN=/usr/local/lib/docker/cli-plugins/docker-compose
+if ! "$COMPOSE_BIN" version 2>/dev/null | grep -q "${COMPOSE_VERSION#v}"; then
+    log "installing docker compose $COMPOSE_VERSION"
+    install -d /usr/local/lib/docker/cli-plugins
+    curl -fsSL -o "$COMPOSE_BIN.tmp" \
+        "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-x86_64"
+    echo "$COMPOSE_SHA256  $COMPOSE_BIN.tmp" | sha256sum -c -
+    chmod 755 "$COMPOSE_BIN.tmp"
+    mv "$COMPOSE_BIN.tmp" "$COMPOSE_BIN"
+fi
+bash "$REPO_DIR/deploy/monitoring/start.sh"
+
 nginx -t
 systemctl enable --now nginx
 systemctl reload nginx || systemctl restart nginx

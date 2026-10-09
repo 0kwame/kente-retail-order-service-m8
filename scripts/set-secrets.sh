@@ -24,6 +24,7 @@ REGION=$(terraform output -raw region)
 DB_SECRET_ID=$(terraform output -raw db_secret_id)
 ADMIN_SECRET_ID=$(terraform output -raw jenkins_admin_secret_id)
 WEBHOOK_SECRET_ID=$(terraform output -raw slack_webhook_secret_id)
+GRAFANA_SECRET_ID=$(terraform output -raw grafana_secret_id)
 
 log() { echo "set-secrets: $*"; }
 
@@ -67,4 +68,13 @@ else
     read -r -s -p "Slack webhook URL (Enter for none): " hook; echo
     printf '%s' "${hook:-none}" | put "$WEBHOOK_SECRET_ID"
     unset hook
+fi
+
+# Generated like the DB password, nobody needs to know it. Read it when you log
+# in to Grafana: aws secretsmanager get-secret-value --secret-id <grafana_secret_id>
+# Hex, not base64, because start.sh writes it to an env file.
+if has_value "$GRAFANA_SECRET_ID"; then
+    log "$GRAFANA_SECRET_ID already has a value"
+else
+    openssl rand -hex 16 | put "$GRAFANA_SECRET_ID"
 fi
