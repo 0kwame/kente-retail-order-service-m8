@@ -20,7 +20,8 @@ cd "$(dirname "$0")/.."
 GROUP=/kente/order-service/incident-2026-07-16
 ACCESS=${1:-../sample-logs/kente-order-service-access.log}
 APP=${2:-../sample-logs/kente-order-service-app.log}
-REGION=$(terraform -chdir=infra output -raw region)
+REGION=${AWS_REGION:-$(terraform -chdir=infra output -raw region 2>/dev/null || true)}
+: "${REGION:?set AWS_REGION, for example us-east-1}"
 
 load() {  # load <file> <stream>
     local file=$1 stream=$2 events

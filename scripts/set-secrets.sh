@@ -20,7 +20,9 @@ cd "$(dirname "$0")/../infra"
 ROTATE_DB=0
 [[ ${1:-} == --rotate-db ]] && ROTATE_DB=1
 
-REGION=$(terraform output -raw region)
+# AWS_REGION wins, so this works before a full apply has stored the outputs.
+REGION=${AWS_REGION:-$(terraform output -raw region 2>/dev/null || true)}
+: "${REGION:?set AWS_REGION, for example us-east-1}"
 DB_SECRET_ID=$(terraform output -raw db_secret_id)
 ADMIN_SECRET_ID=$(terraform output -raw jenkins_admin_secret_id)
 WEBHOOK_SECRET_ID=$(terraform output -raw slack_webhook_secret_id)

@@ -1,3 +1,12 @@
+output "region" {
+  value = var.region
+}
+
+output "db_secret_id" {
+  description = "DB password secret. scripts/set-secrets.sh fills it."
+  value       = aws_secretsmanager_secret.db_password.name
+}
+
 output "jenkins_admin_secret_id" {
   description = "Jenkins admin password. Read it with: aws secretsmanager get-secret-value --secret-id <this>"
   value       = aws_secretsmanager_secret.jenkins_admin_password.name
