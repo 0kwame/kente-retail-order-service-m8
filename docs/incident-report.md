@@ -25,20 +25,26 @@
    $SSH ec2-user@$TARGET 'sudo bluegreen.sh status'   # which colour is live, what image, is nginx up
    curl -s -o /dev/null -w '%{http_code}\n' http://$TARGET/health
    ```
-3. **Decide whether customers are affected.** If traffic is broken, roll back
+3. **Look at the monitoring before you theorise.** Open the Grafana dashboard
+   (request rate, error ratio and p95 by `uri`) and run the saved query in
+   `docs/queries/incident-probes.logsinsights`. The dashboard says how big the
+   problem is and when it started. The query says which IP, which path and when.
+   Both are read-only and take about a minute. The logs are in CloudWatch, so a
+   rollback or restart in the next step does not destroy them.
+4. **Decide whether customers are affected.** If traffic is broken, roll back
    *first* and diagnose afterwards — the rollback needs no diagnosis and costs a
    second:
    ```bash
    $SSH ec2-user@$TARGET 'sudo bluegreen.sh rollback'
    ```
-4. **Localise: pipeline, or service?** They fail differently and are fixed
+5. **Localise: pipeline, or service?** They fail differently and are fixed
    differently. A red build with `:80` still serving `200` is not an outage.
-5. **Find the smallest command that reproduces it.** If it cannot be reproduced
+6. **Find the smallest command that reproduces it.** If it cannot be reproduced
    on demand, it cannot be confirmed fixed.
-6. **Fix the cause, not the symptom** — and check whether the same cause has other
+7. **Fix the cause, not the symptom** — and check whether the same cause has other
    instances. A `chmod` on one host is not a fix if the next `terraform apply`
    recreates the problem.
-7. **Make the failure loud next time.** Every one of these should end with
+8. **Make the failure loud next time.** Every one of these should end with
    something that would have caught it: an assertion, a check in the pipeline, or
    a guard in a script.
 

@@ -180,6 +180,46 @@ same way.
 
 ---
 
+## Module 8 session: defects AI introduced, and what caught them
+
+Module 8 added secrets, IAM, a pinned image, metrics, alerts, central logs and an
+incident query. The same pattern repeated: a confident statement, then a check that
+showed it was wrong.
+
+- **A wrong claim about the starter IAM policy.** AI said the DynamoDB statement
+  used `*:*`. It used the account and the region in the ARN. I read the file again,
+  and the claim was removed from the notes.
+- **A wrong count in the plan.** The plan said `/actuator/env` returned 200 four
+  times. The log has three. I counted the lines before I wrote any document.
+- **Stale base image digests.** A saved Dockerfile patch pinned digests that were out
+  of date. I looked up the current tags and digests, and I did not apply the patch
+  as written.
+- **A Spring Boot patch that did not clear the gate.** AI proposed Boot 3.5.16.
+  Trivy still reported CRITICAL findings, and the `spring-webmvc` fix exists only in
+  Framework 7, so I moved to Boot 4.1.1 and fixed the test compile errors. Running
+  the scanner decided it, not the argument.
+- **A removed variable passed to Terraform.** `terraform plan` failed with a value
+  for an undeclared variable. The cause was a flag for a variable I had removed.
+- **A test harness that mounted a directory instead of a file.** The result looked
+  like a config error. I redid the test with real files and the result was valid.
+- **gitleaks flagged my own code twice.** The hook found false positives in
+  `infra/jenkins/bootstrap.sh` and in the alarm Lambda (a secret ID read from an environment variable).
+  For the shell script I widened the allowlist and tested a known-bad line to make
+  sure the rule still fired. For the Lambda I changed the code and kept the rule.
+- **A duplicated line.** AI wrote `for job in main; do` twice in the walkthrough. I
+  found it by reading the diff.
+
+**Rejected on purpose.** The `openjdk:8u121-jdk` base image commit (`bd178a7`) is a
+pinned tag that is old and unsafe. I also rejected loosening the Trivy gate to get
+Boot 3 through.
+
+**Accepted after change.** AI suggested Slack delivery through AWS Chatbot. It needs
+a manual OAuth step that Terraform cannot create, so I chose SNS plus a small Lambda.
+
+**Not yet verified.** Items that only run in AWS: the CloudWatch agent, the
+`awslogs` driver, the real Logs Insights result and Slack delivery. This section is
+updated after the AWS run.
+
 ## How AI was used, honestly
 
 - **Useful for:** first drafts of long mechanical files (Terraform, JCasC, the

@@ -242,6 +242,37 @@ Then offer the honest limits before being asked — it lands much better volunte
 - **A smoke test will not catch a slow leak** — canary would have. The mitigation
   is that rollback is cheap.
 
+## 8 · Monitoring, logs and the alarm (4 min)
+
+Module 8 section. Run it on the live target, in this order.
+
+```bash
+export GRAFANA=$(terraform -chdir=infra output -raw grafana_url)
+GRAFANA_PW=$(aws secretsmanager get-secret-value \
+  --secret-id "$(terraform -chdir=infra output -raw grafana_secret_id)" \
+  --query SecretString --output text)   # user: admin
+```
+
+1. **The alert fires.** Open `$GRAFANA` and the order-service dashboard. Then run
+   the supplied `load-test.sh http://$TARGET` (it lives in the lab folder, not the repo) and wait about 2 minutes. The error ratio goes
+   above 5%, `OrderServiceHighErrorRatio` fires, and Slack gets the message. Say
+   that the other two rules do not fire in this demo.
+2. **The incident, in one query.** In CloudWatch Logs Insights, select
+   `/kente/order-service/incident-2026-07-16` and paste
+   `docs/queries/incident-probes.logsinsights`. The result names `203.0.113.77`,
+   the probe paths, and `/actuator/env` returning `200` three times from 02:14:52
+   to 02:16:12 and `403` after that. The CloudWatch time is the load time. The real
+   time is in the line, and the query reads it from there.
+3. **The same query, live.** Send `curl -s http://$TARGET/actuator/env` and run the
+   query against `/kente/order-service/access`. Your own request appears with
+   `403`. The `actuator-probe` alarm goes to ALARM within about 2 minutes, and Slack
+   gets a second message.
+
+If asked why the CloudWatch time is wrong: *the supplied log is from July, and
+CloudWatch rejects events older than 14 days, so the upload script stamps the load
+time and leaves the original line unchanged.* The reason is in
+`docs/assumptions-log.md` section 10.
+
 ---
 
 ## Likely questions, and the short answers
@@ -254,6 +285,7 @@ Then offer the honest limits before being asked — it lands much better volunte
 | "What if the switch itself fails?" | `nginx -t` runs before every reload and the previous conf is restored if it fails, so a malformed upstream cannot take down `:80`. And `switch` refuses to move traffic to a colour that is not answering `/health`. |
 | "Two builds at once?" | `disableConcurrentBuilds()`. Both would read the same live colour and both switch — the one race this design cannot survive. |
 | "How do you know which commit is live?" | Image tags are `<build>-<short sha>`. `bluegreen.sh status` prints the running image. Build number alone cannot answer it, which is why the tag carries both. |
+| "Why is 404 an error in the alert?" | A scanner shows as 4xx, and the incident was a scanner. The cost is that a broken client link also counts. The 5xx rule is the service-level one. |
 | "What breaks if Jenkins dies?" | Nothing that is serving traffic. Rebuild is `terraform apply` plus `scripts/bootstrap-jenkins.sh`; the install is three files in `infra/jenkins/`. What is lost is build history, since the volume is not backed up yet — that is on the risk list. |
 
 ---

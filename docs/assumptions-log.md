@@ -228,3 +228,110 @@ Unanswerable from the brief, and each one would change the build:
    vulnerability?** Blocking on CRITICAL-with-fix is my interpretation. If their
    appetite differs, that threshold is one flag — and it should be their call, not
    mine.
+6. **Who owns the Slack channel the alerts go to, and who is on call for it?**
+   An alert that posts to a channel nobody watches at 02:00 is the same as no
+   alert. Both the Prometheus alerts and the CloudWatch alarms use one channel.
+7. **How long may we keep access logs, and do they count as personal data?**
+   They hold client IP addresses. The log groups have no retention today, so they
+   keep everything forever. That is a cost and a privacy question, and the answer
+   should come from the client's legal team, not from me.
+8. **Is an IP-based alert acceptable, or must we avoid acting on IP addresses?**
+   The 404 alarm counts all 404s and does not name an IP. A per-IP rule needs
+   structured logs and a stored identifier, so it should wait for question 7.
+
+## 10. Module 8: the "Sleep at Night" decisions
+
+Module 8 added secrets handling, least-privilege IAM, a pinned image, metrics, an
+alert, central logs and an incident query. The calls below are the ones the brief
+did not settle.
+
+### Alert thresholds, and why
+
+| Rule | Fires when | Why this number |
+|---|---|---|
+| `OrderServiceHighErrorRatio` | 4xx and 5xx are more than 5% of requests for 1 minute | Normal traffic in the sample log has an error ratio near 0%. `load-test.sh` makes about 10% of requests fail, so the rule fires in about 2 minutes. A scanner such as `203.0.113.77` also shows as 4xx. |
+| `OrderServiceServerErrors` | 5xx are more than 0.5% for 5 minutes | A service level rule for real faults. It does not fire in the demo, and the walkthrough says so. |
+| `OrderServiceSlowP95` | p95 latency is above 300 ms for 5 minutes | A starting value, not a measured one. The service has no latency history yet. Tune it after one week of real p95 on the dashboard. |
+| `actuator-probe` (CloudWatch) | One or more `/actuator` requests reach nginx in 1 minute | nginx answers 403, but the attempt is the signal. Prometheus scrapes the app on loopback and never goes through nginx, so a legitimate request cannot trip it. |
+| `404-burst` (CloudWatch) | 20 or more 404s in 1 minute | A path scan makes many 404s in seconds. The sample scanner made four in 16 seconds, so 20 is a deliberate under-reaction to avoid noise. Tune it with real traffic. |
+
+The 404 alarm counts all 404s. A metric filter can split a count by IP only on
+JSON logs, and the nginx access log is plain text. At this traffic level a scan is
+visible in the total.
+
+### The scrape is counted in the error ratio
+
+Prometheus scrapes `/actuator/prometheus` every 15 seconds, and those requests are
+200s. They count in the total and lower the error ratio a little. I left them in
+because the rule is then simple to read. If traffic is low, the effect is large, and
+the fix is to filter the `uri` tag out of both sides of the ratio.
+
+### `/actuator/prometheus` stays open on loopback
+
+The app listens on `127.0.0.1:8081` and `:8082` only, and nginx returns 403 for
+`/actuator`. Prometheus runs with host networking and reaches the ports directly.
+Any process on the target host can also read the metrics. I accepted that because
+the metrics hold no customer data, and the host has one tenant. A second tenant on
+the host would change that.
+
+### The central logging path
+
+- **App logs** use the Docker `awslogs` driver in `non-blocking` mode. If
+  CloudWatch is down, the driver drops lines instead of stalling the app. I
+  prefer losing log lines to losing orders.
+- **The nginx access log** is shipped by the CloudWatch agent, in a format that
+  matches the supplied incident log.
+- **The 14-day limit.** CloudWatch rejects events older than 14 days, and the
+  supplied logs are from 16 July 2026. `scripts/load-sample-logs.sh` stamps each
+  event with the current time and keeps the original line unchanged in the message.
+  So the `[16/Jul/2026:...]` text in each line is the real incident time, and the
+  CloudWatch timestamp is the load time. The query reads the time from the line.
+- **Retention and PII are out of scope**, as the brief says. The three log groups
+  have no retention, so they keep logs forever and cost grows with use. The access
+  log holds client IP addresses. Both are recorded here as gaps, and the CTO
+  questions above ask who decides.
+
+### IAM: what was removed
+
+The starter policy had S3 and DynamoDB statements. The code uses neither, so I
+removed them and deleted `infra/deploy-role-policy.json`. A statement that nothing
+needs is a risk with no benefit. The DynamoDB ARN did not use `*:*` as I first
+said. It used the account and region, and that was my mistake in an earlier note.
+`PutMetricData` keeps `Resource: "*"` because AWS cannot scope it by resource, and
+the `Kente/OrderService` namespace condition is the limit. The log actions are
+scoped to `/kente/order-service/*`. Access Analyzer `validate-policy` output is in
+`docs/evidence/`.
+
+### Spring Boot 4 and two version overrides
+
+Boot 3.5.16 still had CRITICAL findings in `spring-webmvc` and Tomcat. The fix for
+`spring-webmvc` exists only in Framework 7, so I moved to Spring Boot 4.1.1. That
+was a bigger change than the patch I chose in Module 7, and I accepted the risk
+because the gate would not pass otherwise. Boot still manages Tomcat and Jackson one
+patch behind a fix, so `pom.xml` overrides `tomcat.version` and
+`jackson-bom.version`. Each override has a comment: remove it when Boot catches up.
+An override is a debt, because it stops the framework from updating that version.
+
+### The `Kente/OrderService` metric namespace
+
+Custom metrics use one namespace, and the instance role may publish only to it. A
+role that can publish to any namespace could write fake metrics under a name
+another team trusts.
+
+### The rejected base image commit
+
+The starter holds a dangling commit, `bd178a7`, that changes the base image to
+`openjdk:8u121-jdk`. That image is from 2017 and has known CRITICAL findings. It is
+the "pinned is not safe" trap: the tag is pinned, and it is old. I did not use it.
+Both Dockerfile stages are pinned to a current tag and digest, and the Trivy gate
+must still pass on every build. A pin gets old, so a stale pin will fail the gate
+one day, and that is the gate working.
+
+### What is verified, and what waits for AWS
+
+Verified locally: the alert fires under `load-test.sh` (`docs/evidence/alert-fires-local.txt`),
+`nginx -t` on the new log format, the query regex on all 27 sample lines, the Lambda
+handler against a fake webhook, `terraform validate` and plan. Not verified until
+the AWS run: the CloudWatch agent, the `awslogs` driver, the real Logs Insights
+result (I used Python's regex, and Logs Insights uses another engine), Slack
+delivery, and memory on the `t3.medium` target. This section changes after that run.
