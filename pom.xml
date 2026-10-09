@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.5</version>
+    <version>4.1.1</version>
     <relativePath/>
   </parent>
 
@@ -22,24 +22,19 @@
   <properties>
     <java.version>17</java.version>
 
-<!-- Spring Boot 3.2.5 manages Tomcat 10.1.20, which carries four
-         CRITICAL CVEs that all have fixes available: CVE-2025-24813,
-         CVE-2026-41293, CVE-2026-43512, CVE-2026-43515. The pipeline's Trivy
-         gate found them on its first run against this repo, which is the gate
-         doing exactly what it was added to do.
-
-         Overriding tomcat.version is Spring Boot's own documented mechanism for
-         patching a managed dependency. Its blast radius is a Tomcat patch
-         release rather than a whole framework bump, which is the right trade the
-         week before Kente Fest. Remove this override at the next Spring Boot
-         upgrade rather than carrying it forward. -->
-    <tomcat.version>10.1.59</tomcat.version>
+    <!-- Spring Boot 4.1.1 manages Tomcat 11.0.24 and Jackson 3.1.5, each one
+         patch behind a fix for CRITICAL or HIGH findings that Trivy reports.
+         Overriding the version property is Spring Boot's own mechanism for
+         this. Remove both lines when a Boot release manages these versions or
+         newer. -->
+    <tomcat.version>11.0.25</tomcat.version>
+    <jackson-bom.version>3.1.7</jackson-bom.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <artifactId>spring-boot-starter-webmvc</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -53,6 +48,16 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-micrometer-metrics-test</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

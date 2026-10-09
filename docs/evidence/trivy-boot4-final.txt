@@ -1,0 +1,78 @@
+
+Report Summary
+
+┌────────────────────────────────┬────────┬─────────────────┐
+│             Target             │  Type  │ Vulnerabilities │
+├────────────────────────────────┼────────┼─────────────────┤
+│ kente-m8:boot4b (ubuntu 24.04) │ ubuntu │       15        │
+├────────────────────────────────┼────────┼─────────────────┤
+│ app/app.jar                    │  jar   │        0        │
+└────────────────────────────────┴────────┴─────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+kente-m8:boot4b (ubuntu 24.04)
+==============================
+Total: 15 (MEDIUM: 15, HIGH: 0, CRITICAL: 0)
+
+┌────────────────┬────────────────┬──────────┬──────────┬─────────────────────────┬────────────────────────┬─────────────────────────────────────────────────────────────┐
+│    Library     │ Vulnerability  │ Severity │  Status  │    Installed Version    │     Fixed Version      │                            Title                            │
+├────────────────┼────────────────┼──────────┼──────────┼─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ libc-bin       │ CVE-2026-18374 │ MEDIUM   │ affected │ 2.39-0ubuntu8.9         │                        │ glibc: glibc: Heap buffer overflow via attacker-controlled  │
+│                │                │          │          │                         │                        │ fopen mode string                                           │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-18374                  │
+│                ├────────────────┤          │          │                         ├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│                │ CVE-2026-89092 │          │          │                         │                        │ glibc: nscd stack overflow leads to degraded DNS resolution │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-89092                  │
+├────────────────┼────────────────┤          │          │                         ├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ libc6          │ CVE-2026-18374 │          │          │                         │                        │ glibc: glibc: Heap buffer overflow via attacker-controlled  │
+│                │                │          │          │                         │                        │ fopen mode string                                           │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-18374                  │
+│                ├────────────────┤          │          │                         ├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│                │ CVE-2026-89092 │          │          │                         │                        │ glibc: nscd stack overflow leads to degraded DNS resolution │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-89092                  │
+├────────────────┼────────────────┤          │          ├─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ libexpat1      │ CVE-2025-66382 │          │          │ 2.6.1-2ubuntu0.6        │                        │ libexpat: libexpat: Denial of service via crafted file      │
+│                │                │          │          │                         │                        │ processing                                                  │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2025-66382                  │
+├────────────────┼────────────────┤          ├──────────┼─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ libfreetype6   │ CVE-2026-95512 │          │ fixed    │ 2.13.2+dfsg-1ubuntu0.1  │ 2.13.2+dfsg-1ubuntu0.2 │ freetype: FreeType: Denial of Service via repeated          │
+│                │                │          │          │                         │                        │ subroutine allocations in CID font...                       │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-95512                  │
+├────────────────┼────────────────┤          ├──────────┼─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ libpcre2-8-0   │ CVE-2026-86145 │          │ affected │ 10.42-4ubuntu2.1        │                        │ pcre2: PCRE2: Out-of-bounds write allows arbitrary code     │
+│                │                │          │          │                         │                        │ execution via crafted regular expressions...                │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-86145                  │
+│                ├────────────────┤          │          │                         ├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│                │ CVE-2026-89161 │          │          │                         │                        │ pcre2: PCRE2: Memory corruption vulnerability in            │
+│                │                │          │          │                         │                        │ pcre2_jit_match                                             │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-89161                  │
+├────────────────┼────────────────┤          ├──────────┼─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ libpng16-16t64 │ CVE-2026-46675 │          │ fixed    │ 1.6.43-5ubuntu0.6       │ 1.6.43-5ubuntu0.7      │ [Use-after-free of zlib input in `png_read_end` after       │
+│                │                │          │          │                         │                        │ incomplete zTXt, iTXt or iCCP...                            │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-46675                  │
+├────────────────┼────────────────┤          ├──────────┼─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ locales        │ CVE-2026-18374 │          │ affected │ 2.39-0ubuntu8.9         │                        │ glibc: glibc: Heap buffer overflow via attacker-controlled  │
+│                │                │          │          │                         │                        │ fopen mode string                                           │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-18374                  │
+│                ├────────────────┤          │          │                         ├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│                │ CVE-2026-89092 │          │          │                         │                        │ glibc: nscd stack overflow leads to degraded DNS resolution │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-89092                  │
+├────────────────┼────────────────┤          │          ├─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ tar            │ CVE-2026-18477 │          │          │ 1.35+dfsg-3ubuntu0.4    │                        │ tar: tar: TOCTOU in incremental dumpdir 'X' rename handling │
+│                │                │          │          │                         │                        │ allows restore path...                                      │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-18477                  │
+│                ├────────────────┤          │          │                         ├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│                │ CVE-2026-18508 │          │          │                         │                        │ tar: tar: --one-top-level hardlink targets not confined to  │
+│                │                │          │          │                         │                        │ top-level directory enabling arbitrary...                   │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-18508                  │
+├────────────────┼────────────────┤          │          ├─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ wget           │ CVE-2021-31879 │          │          │ 1.21.4-1ubuntu4.5       │                        │ wget: authorization header disclosure on redirect           │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2021-31879                  │
+├────────────────┼────────────────┤          │          ├─────────────────────────┼────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ zlib1g         │ CVE-2026-85091 │          │          │ 1:1.3.dfsg-3.1ubuntu2.2 │                        │ zlib versions 1.3.1.2 through 1.3.2 contain a heap buffer   │
+│                │                │          │          │                         │                        │ overflow vul ......                                         │
+│                │                │          │          │                         │                        │ https://avd.aquasec.com/nvd/cve-2026-85091                  │
+└────────────────┴────────────────┴──────────┴──────────┴─────────────────────────┴────────────────────────┴─────────────────────────────────────────────────────────────┘
