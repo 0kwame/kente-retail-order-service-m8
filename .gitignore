@@ -12,3 +12,5 @@ infra/terraform.tfstate
 infra/terraform.tfstate.*
 infra/*.tfvars
 infra/*.pem
+infra/alarm-lambda/handler.zip
+__pycache__/
