@@ -327,11 +327,34 @@ Both Dockerfile stages are pinned to a current tag and digest, and the Trivy gat
 must still pass on every build. A pin gets old, so a stale pin will fail the gate
 one day, and that is the gate working.
 
-### What is verified, and what waits for AWS
+### What is verified, and where
 
-Verified locally: the alert fires under `load-test.sh` (`docs/evidence/alert-fires-local.txt`),
-`nginx -t` on the new log format, the query regex on all 27 sample lines, the Lambda
-handler against a fake webhook, `terraform validate` and plan. Not verified until
-the AWS run: the CloudWatch agent, the `awslogs` driver, the real Logs Insights
-result (I used Python's regex, and Logs Insights uses another engine), Slack
-delivery, and memory on the `t3.medium` target. This section changes after that run.
+Verified in AWS on 2026-10-09 (target `i-05c83f5ceaa174e88`, build 1 and build 2 of
+`main`, blue and green both deployed):
+
+- **App logs.** The `awslogs` driver wrote one stream per colour to
+  `/kente/order-service/app`.
+- **Access logs.** The CloudWatch agent shipped the nginx access log. A request for
+  `/actuator/env` from outside appeared with `403` and `upstream=-`, which shows that
+  nginx blocks it before the app.
+- **The `/actuator` alarm.** A request at 21:00:49 UTC put the alarm in ALARM at
+  21:01:35, which is 46 seconds, and Slack received the message.
+- **The error-ratio alert.** `load-test.sh` made `OrderServiceHighErrorRatio` pending at
+  21:14:50 and firing at 21:15:50, and Slack received FIRING and RESOLVED
+  (`docs/evidence/alert-fires-aws.txt`, `slack-alerts-aws.png`).
+- **The 404 alarm fired too.** The load test sends 404s on purpose, so
+  `404-burst` went to ALARM at 35 in one minute. That is correct behaviour, and it
+  means the two alerts are not independent during a load test.
+- **The incident query**, on the real Logs Insights engine
+  (`docs/evidence/insights-incident-result.txt`). The first version used `min(ts)` and
+  `max(ts)`, which return nothing on text. The query now uses `earliest(ts)` and
+  `latest(ts)`. Python's regex had passed the first version, so the local check was
+  not enough.
+- **Memory.** The `t3.medium` target used 575 MB of 3.8 GB with only the monitoring
+  stack running.
+- **IAM.** Access Analyzer `validate-policy` returned no findings for both final
+  policies (`docs/evidence/iam-*-validate-policy.json`).
+
+One lag to know about: Logs Insights did not see newly loaded events for about two
+minutes. A query run right after `scripts/load-sample-logs.sh` returns no rows, and
+that is not a failure.

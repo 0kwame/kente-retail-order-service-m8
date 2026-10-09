@@ -7,5 +7,5 @@
 # group) have no path and drop out at the filter.
 parse @message /^(?<ip>\S+) .*\[(?<ts>[^\]]+)\] "(?<method>\S+) (?<path>\S+)[^"]*" (?<status>\d{3}) (?<bytes>\d+) "[^"]*" "(?<ua>[^"]*)"/
 | filter path like /actuator|\.env|wp-login|admin|config/
-| stats count(*) as hits, min(ts) as first_seen, max(ts) as last_seen by ip, path, status
+| stats count(*) as hits, earliest(ts) as first_seen, latest(ts) as last_seen by ip, path, status
 | sort hits desc

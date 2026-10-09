@@ -216,9 +216,16 @@ Boot 3 through.
 **Accepted after change.** AI suggested Slack delivery through AWS Chatbot. It needs
 a manual OAuth step that Terraform cannot create, so I chose SNS plus a small Lambda.
 
-**Not yet verified.** Items that only run in AWS: the CloudWatch agent, the
-`awslogs` driver, the real Logs Insights result and Slack delivery. This section is
-updated after the AWS run.
+**A query that passed locally and was wrong in AWS.** I tested the Insights query
+with Python's regex, and it passed on all 27 lines. The real engine returned no values
+for `first_seen` and `last_seen`, because `min()` and `max()` do not work on text.
+`earliest()` and `latest()` fixed it. I had said in my report that Python's regex was
+not the real engine, and the AWS run proved that point.
+
+**Missing outputs.** `scripts/set-secrets.sh` read two Terraform outputs, `region`
+and `db_secret_id`, that did not exist. I found it by reading the script against
+`outputs.tf` before the first AWS run, not by running it, so I fixed it before it
+cost anything.
 
 ## How AI was used, honestly
 

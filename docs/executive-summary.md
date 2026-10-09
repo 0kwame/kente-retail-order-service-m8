@@ -93,8 +93,11 @@ against AI-based operations is in `docs/aiops-reflection.md`.
 scope. The log groups keep everything forever, and the access log holds client IP
 addresses. I need a decision from the client on both.
 
-**Status.** Everything above passed local checks. The AWS run (agent, log driver,
-Slack, the real query) is the last step, and this document changes after it.
+**Status.** Verified in AWS on 2026-10-09: both colours deploy and switch, the
+alert fires under the load test and reaches Slack, the `/actuator` alarm fires in
+46 seconds, app and access logs reach CloudWatch, and the incident query returns the
+probing IP and the `200` window on the real Logs Insights engine. Evidence is in
+`docs/evidence/`.
 
 ## Deployment strategy: blue-green, not canary
 

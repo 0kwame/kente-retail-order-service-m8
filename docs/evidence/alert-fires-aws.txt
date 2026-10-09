@@ -1,0 +1,10 @@
+# Alert fires in AWS under load-test.sh, 2026-10-09 (target i-05c83f5ceaa174e88)
+# Source: Prometheus ALERTS series, queried on the target after the test.
+# pending 21:14:50Z to 21:15:35Z, firing 21:15:50Z to 21:18:05Z (UTC)
+
+## ALERTS series over last 20m
+OrderServiceHighErrorRatio firing 1791580550.872 1791580685.872
+OrderServiceHighErrorRatio pending 1791580490.872 1791580535.872
+## current error ratio
+
+# error ratio after the test ended: 0

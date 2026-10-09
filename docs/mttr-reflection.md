@@ -17,7 +17,7 @@ block. The log has no sign that anyone saw it while it happened.
 
 | Part | Before | Now |
 |---|---|---|
-| Detect | Nobody was told. The block came because someone read the log later. | The `actuator-probe` alarm counts any `/actuator` request that reaches nginx. I expect it to post to Slack within about 2 minutes of the 02:11:58 request, so before the first leaked response at 02:14:52. I measure this in the AWS run, and I do not claim it yet. |
+| Detect | Nobody was told. The block came because someone read the log later. | The `actuator-probe` alarm counts any `/actuator` request that reaches nginx. In the AWS run, a request for `/actuator/env` at 21:00:49 put the alarm in ALARM at 21:01:35, which is 46 seconds, and Slack had the message. The same delay after the 02:11:58 request would give an alert at about 02:12:45, which is before the first leaked response at 02:14:52. |
 | Diagnose | Search two log files by hand. | One Logs Insights query returns the IP, the paths, the status and the first and last time. The dashboard shows the error ratio by `uri`. |
 | Repair | A code or proxy change, then a deploy that stopped the old container first. | nginx returns 403 for `/actuator`, and a release moves traffic in about a second with a one-second rollback. |
 

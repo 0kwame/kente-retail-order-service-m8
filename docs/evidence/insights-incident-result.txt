@@ -1,0 +1,11 @@
+# Logs Insights result in AWS, 2026-10-09. Group: /kente/order-service/incident-2026-07-16
+# Query: docs/queries/incident-probes.logsinsights. Columns: ip | path | status | hits | first_seen | last_seen
+{'recordsMatched': 12.0, 'recordsScanned': 37.0, 'estimatedRecordsSkipped': 0.0, 'bytesScanned': 5520.0, 'estimatedBytesSkipped': 0.0, 'logGroupsScanned': 1.0}
+203.0.113.77 | /actuator/env | 200 | 3 | 16/Jul/2026:02:14:52 +0000 | 16/Jul/2026:02:16:12 +0000
+203.0.113.77 | /actuator/env | 403 | 3 | 16/Jul/2026:02:18:29 +0000 | 16/Jul/2026:02:21:05 +0000
+203.0.113.77 | /wp-login.php | 404 | 1 | 16/Jul/2026:02:11:44 +0000 | 16/Jul/2026:02:11:44 +0000
+203.0.113.77 | /admin | 404 | 1 | 16/Jul/2026:02:11:47 +0000 | 16/Jul/2026:02:11:47 +0000
+203.0.113.77 | /actuator | 200 | 1 | 16/Jul/2026:02:11:58 +0000 | 16/Jul/2026:02:11:58 +0000
+203.0.113.77 | /actuator/heapdump | 404 | 1 | 16/Jul/2026:02:12:03 +0000 | 16/Jul/2026:02:12:03 +0000
+203.0.113.77 | /config.json | 404 | 1 | 16/Jul/2026:02:11:51 +0000 | 16/Jul/2026:02:11:51 +0000
+203.0.113.77 | /.env | 404 | 1 | 16/Jul/2026:02:11:42 +0000 | 16/Jul/2026:02:11:42 +0000
