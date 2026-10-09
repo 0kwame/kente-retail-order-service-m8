@@ -10,6 +10,8 @@ resource "aws_secretsmanager_secret" "db_password" {
 
 # --- deploy target instance role --------------------------------------------
 
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "ec2_assume" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -33,6 +35,29 @@ data "aws_iam_policy_document" "target" {
     sid       = "ReadDbPassword"
     actions   = ["secretsmanager:GetSecretValue"]
     resources = [aws_secretsmanager_secret.db_password.arn]
+  }
+
+  # Central logging: the awslogs driver and the CloudWatch agent write here only.
+  # The trailing * also matches the log streams inside each group.
+  statement {
+    sid     = "ShipLogs"
+    actions = ["logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = [
+      "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/kente/order-service/*",
+    ]
+  }
+
+  # AWS cannot scope PutMetricData by resource, so "*" is needed. The namespace
+  # condition is the limit.
+  statement {
+    sid       = "PutMetrics"
+    actions   = ["cloudwatch:PutMetricData"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "cloudwatch:namespace"
+      values   = ["Kente/OrderService"]
+    }
   }
 }
 

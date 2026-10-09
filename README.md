@@ -121,8 +121,8 @@ Endpoints:
 This repo is the base for the Module 8 lab ("Sleep at Night"). The Module 8
 starter's additions are ported in as they were handed over: actuator and
 Prometheus metrics, `src/main/resources/application.properties`, the single-order
-lookup, and `infra/deploy-role-policy.json` (the IAM policy for the service's
-deploy role). They have not been reviewed yet.
+lookup, and an IAM policy for the service's deploy role. The policy is now in
+`infra/security.tf`, cut down to what the service uses (logs, metrics, one secret).
 
 What gets built on top:
 
