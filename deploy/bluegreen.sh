@@ -157,12 +157,20 @@ cmd_deploy() {
     docker rm -f "$name" >/dev/null 2>&1 || true
     # -e NAME with no value copies it from this command's environment, so the
     # password is not on the docker command line or in `ps`.
+    # Logs go to CloudWatch through the instance role. non-blocking means a
+    # CloudWatch outage drops log lines instead of stalling the app.
     DB_PASSWORD="$secret" docker run -d \
         --name "$name" \
         --restart unless-stopped \
         -p "127.0.0.1:${port}:8080" \
         --label "kente.colour=${colour}" \
         --label "kente.image=${image}" \
+        --log-driver awslogs \
+        --log-opt "awslogs-region=${AWS_REGION:?}" \
+        --log-opt awslogs-group=/kente/order-service/app \
+        --log-opt "awslogs-stream=${colour}" \
+        --log-opt mode=non-blocking \
+        --log-opt max-buffer-size=4m \
         -e DB_PASSWORD \
         "$image" >/dev/null
 

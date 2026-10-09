@@ -1,0 +1,11 @@
+# CloudWatch Logs Insights. Run it on /kente/order-service/access (live) or
+# /kente/order-service/incident-2026-07-16 (the supplied incident logs).
+#
+# Question: who probed for sensitive paths, how often, and what did we answer?
+# The parse line reads the combined access-log format that nginx writes and that
+# the incident log uses. Lines that do not match (the app log in the incident
+# group) have no path and drop out at the filter.
+parse @message /^(?<ip>\S+) .*\[(?<ts>[^\]]+)\] "(?<method>\S+) (?<path>\S+)[^"]*" (?<status>\d{3}) (?<bytes>\d+) "[^"]*" "(?<ua>[^"]*)"/
+| filter path like /actuator|\.env|wp-login|admin|config/
+| stats count(*) as hits, min(ts) as first_seen, max(ts) as last_seen by ip, path, status
+| sort hits desc

@@ -78,4 +78,12 @@ nginx -t
 systemctl enable --now nginx
 systemctl reload nginx || systemctl restart nginx
 
+# --- central logging: ship the nginx access log to CloudWatch ----------------
+# The app container logs through the awslogs driver (bluegreen.sh). nginx runs
+# on the host, so it needs the agent. The agent uses the instance role.
+dnf install -y amazon-cloudwatch-agent
+install -m 644 "$REPO_DIR/deploy/cloudwatch/agent.json" /opt/aws/amazon-cloudwatch-agent/etc/kente-agent.json
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+    -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/kente-agent.json -s
+
 log "ready. live colour: $(/usr/local/bin/bluegreen.sh current)"

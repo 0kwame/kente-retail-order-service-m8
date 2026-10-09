@@ -72,10 +72,11 @@ data "aws_iam_policy_document" "target" {
   }
 
   # Central logging: the awslogs driver and the CloudWatch agent write here only.
+  # The agent also needs DescribeLogStreams.
   # The trailing * also matches the log streams inside each group.
   statement {
     sid     = "ShipLogs"
-    actions = ["logs:CreateLogStream", "logs:PutLogEvents"]
+    actions = ["logs:CreateLogStream", "logs:PutLogEvents", "logs:DescribeLogStreams"]
     resources = [
       "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/kente/order-service/*",
     ]
