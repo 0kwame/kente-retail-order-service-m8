@@ -186,6 +186,7 @@ resource "aws_instance" "jenkins" {
   subnet_id                   = data.aws_subnets.default.ids[0]
   key_name                    = aws_key_pair.lab.key_name
   vpc_security_group_ids      = [aws_security_group.jenkins.id]
+  iam_instance_profile        = aws_iam_instance_profile.jenkins.name
   associate_public_ip_address = true
 
   root_block_device {
@@ -194,12 +195,14 @@ resource "aws_instance" "jenkins" {
     encrypted   = true
   }
 
+  # Secret NAMES only. Module 7 passed the password and webhook VALUES here.
   user_data = templatefile("${path.module}/user_data_jenkins.sh", {
-    repo_url               = var.repo_url
-    repo_branch            = var.repo_branch
-    jenkins_admin_password = var.jenkins_admin_password
-    slack_webhook_url      = var.slack_webhook_url
-    deploy_host            = aws_instance.target.private_ip
+    repo_url          = var.repo_url
+    repo_branch       = var.repo_branch
+    region            = var.region
+    admin_secret_id   = aws_secretsmanager_secret.jenkins_admin_password.name
+    webhook_secret_id = aws_secretsmanager_secret.slack_webhook.name
+    deploy_host       = aws_instance.target.private_ip
   })
 
   tags = { Name = "${var.name_prefix}-jenkins", Role = "jenkins" }

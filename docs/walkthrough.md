@@ -265,6 +265,9 @@ Build history lives on the Jenkins volume and dies with the instance.
 ```bash
 # Console log for the green run on main (the Module 7 broken/* logs are
 # already in docs/evidence/)
+JENKINS_ADMIN_PASSWORD=$(aws secretsmanager get-secret-value \
+  --secret-id "$(terraform -chdir=infra output -raw jenkins_admin_secret_id)" \
+  --query SecretString --output text)
 for job in main; do
   out="evidence-$(echo "$job" | tr '/%' '__').txt"
   curl -su "admin:$JENKINS_ADMIN_PASSWORD" \

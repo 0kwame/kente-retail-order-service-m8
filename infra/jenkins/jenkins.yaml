@@ -7,7 +7,9 @@
 #
 # Secrets resolve from two sources and never from this file:
 #   ${JENKINS_ADMIN_PASSWORD}, ${SLACK_WEBHOOK_URL}, ${DEPLOY_HOST}
-#       -- container environment, set from /etc/kente-jenkins.env
+#       -- container environment. DEPLOY_HOST comes from /etc/kente-jenkins.env.
+#          The password and webhook come from Secrets Manager, read by
+#          infra/jenkins/bootstrap.sh through the host's instance role.
 #   ${kente_deploy_key}
 #       -- JCasC's Docker-secret source: the file /run/secrets/kente_deploy_key,
 #          mounted read-only from /etc/kente-secrets on the host.

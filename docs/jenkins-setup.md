@@ -68,7 +68,14 @@ only.
 | Id | Kind | Used for | Where the value comes from |
 |---|---|---|---|
 | `kente-deploy-ssh` | SSH private key | Every SSH and `docker save` pipe to the deploy target | `/run/secrets/kente_deploy_key`, mounted read-only from `/etc/kente-secrets` on the host |
-| `kente-slack-webhook` | Secret text | The failure notification | `SLACK_WEBHOOK_URL` in the container env, from `/etc/kente-jenkins.env` |
+| `kente-slack-webhook` | Secret text | The failure notification | `SLACK_WEBHOOK_URL` in the container env, read from Secrets Manager by `infra/jenkins/bootstrap.sh` |
+
+The admin password and the webhook are Secrets Manager secrets
+(`terraform output jenkins_admin_secret_id` and `slack_webhook_secret_id`).
+`scripts/set-secrets.sh` fills them. The Jenkins host reads them at each start
+through its instance role. Module 7 passed both as Terraform variables into
+`user_data`, which left them in plaintext in instance metadata and in
+`terraform.tfstate`.
 
 JCasC resolves `${kente_deploy_key}` through its Docker-secret source, which reads
 files from `/run/secrets/`. So the key exists as a file on the host and as a
@@ -89,9 +96,7 @@ why JCasC never starts before the credential it needs exists.
 cd infra
 terraform init
 terraform apply \
-  -var "admin_cidr=$(curl -s https://checkip.amazonaws.com)/32" \
-  -var "jenkins_admin_password=<choose one>" \
-  -var "slack_webhook_url=<optional, empty is fine>"
+  -var "admin_cidr=$(curl -s https://checkip.amazonaws.com)/32"
 
 cd .. && ./scripts/bootstrap-jenkins.sh
 ```

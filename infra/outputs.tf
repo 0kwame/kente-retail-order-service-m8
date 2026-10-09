@@ -1,3 +1,12 @@
+output "jenkins_admin_secret_id" {
+  description = "Jenkins admin password. Read it with: aws secretsmanager get-secret-value --secret-id <this>"
+  value       = aws_secretsmanager_secret.jenkins_admin_password.name
+}
+
+output "slack_webhook_secret_id" {
+  value = aws_secretsmanager_secret.slack_webhook.name
+}
+
 output "jenkins_url" {
   description = "Jenkins UI. Reachable only from admin_cidr."
   value       = "http://${aws_instance.jenkins.public_ip}:8080"

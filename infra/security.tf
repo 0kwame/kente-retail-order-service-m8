@@ -10,6 +10,22 @@ resource "aws_secretsmanager_secret" "db_password" {
 
 # --- deploy target instance role --------------------------------------------
 
+# user_data used to carry these two values in plaintext, readable with
+# ec2:DescribeInstanceAttribute or from IMDS on the host, and kept in the state
+# file. Now only the secret NAMES reach user_data. Created EMPTY, filled by
+# scripts/set-secrets.sh.
+resource "aws_secretsmanager_secret" "jenkins_admin_password" {
+  name                    = "${var.name_prefix}/jenkins/admin-password"
+  description             = "Password for the Jenkins admin user, read by infra/jenkins/bootstrap.sh."
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret" "slack_webhook" {
+  name                    = "${var.name_prefix}/slack-webhook"
+  description             = "Slack incoming webhook. The literal value 'none' disables notifications."
+  recovery_window_in_days = 0
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "ec2_assume" {
@@ -70,4 +86,35 @@ resource "aws_iam_role_policy" "target" {
 resource "aws_iam_instance_profile" "target" {
   name = "${var.name_prefix}-target"
   role = aws_iam_role.target.name
+}
+
+# --- Jenkins host -----------------------------------------------------------
+
+resource "aws_iam_role" "jenkins" {
+  name               = "${var.name_prefix}-jenkins"
+  assume_role_policy = data.aws_iam_policy_document.ec2_assume.json
+}
+
+data "aws_iam_policy_document" "jenkins" {
+  # infra/jenkins/bootstrap.sh reads both at controller start and passes them
+  # to the container env for JCasC. Read-only, these two secrets only.
+  statement {
+    sid     = "ReadJenkinsSecrets"
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
+      aws_secretsmanager_secret.jenkins_admin_password.arn,
+      aws_secretsmanager_secret.slack_webhook.arn,
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "jenkins" {
+  name   = "${var.name_prefix}-jenkins"
+  role   = aws_iam_role.jenkins.id
+  policy = data.aws_iam_policy_document.jenkins.json
+}
+
+resource "aws_iam_instance_profile" "jenkins" {
+  name = "${var.name_prefix}-jenkins"
+  role = aws_iam_role.jenkins.name
 }

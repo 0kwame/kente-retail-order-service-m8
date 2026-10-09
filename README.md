@@ -17,14 +17,15 @@ stands the whole thing up from nothing.
 cd infra
 terraform init
 terraform apply \
-  -var "admin_cidr=$(curl -s https://checkip.amazonaws.com)/32" \
-  -var "jenkins_admin_password=<choose one>" \
-  -var "slack_webhook_url=<optional>"
+  -var "admin_cidr=$(curl -s https://checkip.amazonaws.com)/32"
 # Always pass admin_cidr on the command line. It is the one address allowed to
 # reach SSH and Jenkins, and an ISP address changes without warning -- a stale
 # value locks you out, and the symptom is a timeout rather than an error.
 
-# 2. Hand the deploy key to Jenkins and start the controller
+# 2. Fill the secrets, hand the deploy key to Jenkins, start the controller.
+#    The first run asks for the Jenkins admin password and an optional Slack
+#    webhook, and generates the DB password. All three go to Secrets Manager,
+#    never to Terraform.
 cd .. && ./scripts/bootstrap-jenkins.sh
 
 # 3. Open the URL it prints, log in as admin, run the 'order-service' job

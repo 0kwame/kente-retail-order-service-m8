@@ -25,7 +25,21 @@ die() { echo "jenkins-bootstrap: $*" >&2; exit 1; }
 # shellcheck disable=SC1090
 set -a; source "$ENV_FILE"; set +a
 
-[[ -n ${JENKINS_ADMIN_PASSWORD:-} ]] || die "JENKINS_ADMIN_PASSWORD empty in $ENV_FILE"
+# The two secrets come from Secrets Manager through the instance role, at every
+# start. They are not in $ENV_FILE, user_data or Terraform state.
+secret() {
+    aws secretsmanager get-secret-value --region "${AWS_REGION:?}" --secret-id "$1" \
+        --query SecretString --output text \
+        || die "cannot read secret $1 -- run scripts/set-secrets.sh from your machine"
+}
+JENKINS_ADMIN_PASSWORD=$(secret "${ADMIN_SECRET_ID:?ADMIN_SECRET_ID missing in $ENV_FILE}")
+SLACK_WEBHOOK_URL=$(secret "${WEBHOOK_SECRET_ID:?WEBHOOK_SECRET_ID missing in $ENV_FILE}")
+# 'none' is the stored value for "no Slack". Secrets Manager does not accept an
+# empty string, and the pipeline already treats an empty webhook as "skip".
+[[ $SLACK_WEBHOOK_URL == none ]] && SLACK_WEBHOOK_URL=""
+export JENKINS_ADMIN_PASSWORD SLACK_WEBHOOK_URL
+
+[[ -n ${JENKINS_ADMIN_PASSWORD:-} ]] || die "Jenkins admin password secret is empty"
 [[ -n ${DEPLOY_HOST:-} ]]            || die "DEPLOY_HOST empty in $ENV_FILE"
 [[ -f $SECRETS_DIR/kente_deploy_key ]] || die \
     "$SECRETS_DIR/kente_deploy_key missing -- run scripts/bootstrap-jenkins.sh from your machine, which copies it here"

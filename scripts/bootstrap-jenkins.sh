@@ -64,6 +64,10 @@ wait_for_cloud_init() {
     exit 1
 }
 
+# Secrets first: the Jenkins bootstrap on the host reads them from Secrets
+# Manager and stops if they are empty. Idempotent, so a re-run asks nothing.
+../scripts/set-secrets.sh   # cwd is infra/ (see the cd above)
+
 wait_for_ssh "$TARGET_IP" deploy-target
 wait_for_cloud_init "$TARGET_IP" deploy-target
 

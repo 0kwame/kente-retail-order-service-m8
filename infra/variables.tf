@@ -48,15 +48,6 @@ variable "repo_branch" {
   default     = "main"
 }
 
-variable "jenkins_admin_password" {
-  description = "Password for the Jenkins 'admin' user, injected into JCasC. No default on purpose."
-  type        = string
-  sensitive   = true
-}
-
-variable "slack_webhook_url" {
-  description = "Slack incoming-webhook URL for the failure notification. Empty disables it cleanly."
-  type        = string
-  sensitive   = true
-  default     = ""
-}
+# jenkins_admin_password and slack_webhook_url were variables in Module 7.
+# They are now Secrets Manager secrets filled by scripts/set-secrets.sh, so a
+# secret value is never passed to Terraform and never lands in its state.
